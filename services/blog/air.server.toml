@@ -1,0 +1,9 @@
+[build]
+cmd = "make dist/loc/server"
+bin = "./dist/loc/server"
+include_dir = [
+    ""
+]
+exclude_dir = [
+]
+stop_on_error = true
