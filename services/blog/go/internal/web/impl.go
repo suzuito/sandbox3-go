@@ -1,12 +1,43 @@
 package web
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+	"net/url"
+	"path"
+
+	"github.com/gin-gonic/gin"
+	"github.com/suzuito/sandbox2-common-go/libs/terrors"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/inject"
+)
 
 type impl struct {
+	siteOrigin          url.URL
+	googleTagManagerID  string
+	adminToken          string
+	dirPathHTMLTemplate string
 }
 
-func (t *impl) SetEngine(e *gin.Engine) {}
+func (t *impl) SetEngine(e *gin.Engine) {
+	e.GET(
+		"health",
+		middlewareXRobotsTag,
+		func(ctx *gin.Context) { ctx.JSON(http.StatusOK, struct{}{}) },
+	)
+	e.LoadHTMLGlob(path.Join(t.dirPathHTMLTemplate, "*.html"))
+	e.Use(t.middlewareAdminAuthe)
+	e.GET("", t.pageIndex)
+}
 
-func New() *impl {
-	return &impl{}
+func New(env *inject.Environment) (*impl, error) {
+	urlSiteOrigin, err := url.Parse(env.SiteOrigin)
+	if err != nil {
+		return nil, terrors.Errorf("failed to url.Parse: %w", err)
+	}
+
+	return &impl{
+		siteOrigin:          *urlSiteOrigin,
+		googleTagManagerID:  env.GoogleTagManagerID,
+		adminToken:          env.AdminToken,
+		dirPathHTMLTemplate: env.DirPathHTMLTemplate,
+	}, nil
 }

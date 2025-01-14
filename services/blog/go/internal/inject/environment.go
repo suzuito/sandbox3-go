@@ -1,4 +1,8 @@
 package inject
 
 type Environment struct {
+	SiteOrigin          string `required:"true" split_words:"true"`
+	GoogleTagManagerID  string `envconfig:"GOOGLE_TAG_MANAGER_ID"`
+	AdminToken          string `required:"true" split_words:"true"`
+	DirPathHTMLTemplate string `required:"true" split_words:"true"`
 }

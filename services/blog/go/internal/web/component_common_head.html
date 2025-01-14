@@ -1,0 +1,33 @@
+{{define "component_common_head"}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="icon" type="image/png" href="/images/avatar.jpg">
+<link rel="stylesheet" href="/css/common.css">
+<title>{{.ComponentCommonHead.Title}}</title>
+{{if .ComponentCommonHead.Meta}}
+<link rel="canonical" href="{{.ComponentCommonHead.Meta.Canonical}}">
+<meta name="description" content="{{.ComponentCommonHead.Meta.OGP.Description}}">
+<meta property="og:title" content="{{.ComponentCommonHead.Meta.OGP.Title}}">
+<meta property="og:description" content="{{.ComponentCommonHead.Meta.OGP.Description}}">
+<meta property="og:locale" content="{{.ComponentCommonHead.Meta.OGP.Locale}}">
+<meta property="og:type" content="{{.ComponentCommonHead.Meta.OGP.Type}}">
+<meta property="og:url" content="{{.ComponentCommonHead.Meta.OGP.URL}}">
+<meta property="og:site_name" content="{{.ComponentCommonHead.Meta.OGP.SiteName}}">
+<meta property="og:image" content="{{.ComponentCommonHead.Meta.OGP.Image}}">
+{{if .ComponentCommonHead.Meta.LDJSON}}
+<script type="application/ld+json">
+    {{.ComponentCommonHead.Meta.LDJSON}}
+</script>
+{{end}}
+{{end}}
+{{if .ComponentCommonHead.GoogleTagManagerID}}
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{.ComponentCommonHead.GoogleTagManagerID}}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', '{{.ComponentCommonHead.GoogleTagManagerID}}');
+</script>
+{{end}}
+{{end}}

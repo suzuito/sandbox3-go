@@ -1,0 +1,29 @@
+{{define "component_header"}}
+<style>
+    .component_header-title {
+        font-weight: bold;
+        position: absolute;
+        left: 6px;
+        top: 6px;
+    }
+
+    .component_header-nav {
+        position: absolute;
+        right: 6px;
+        top: 6px;
+    }
+</style>
+<header class="component_header">
+    <div class="component_header-title">
+        <a href="/">otiuzu</a>
+    </div>
+    <nav class="component_header-nav">
+        {{ if .ComponentHeader.IsAdmin }}
+        <a href="/admin">管理画面</a>
+        {{ end }}
+        <a href="/articles">日記</a>
+        <a href="/about">About</a>
+        <a href="https://github.com/suzuito" target="_blank">Github</a>
+    </nav>
+</header>
+{{end}}
