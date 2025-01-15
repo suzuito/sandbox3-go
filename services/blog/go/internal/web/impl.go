@@ -15,6 +15,7 @@ type impl struct {
 	googleTagManagerID  string
 	adminToken          string
 	dirPathHTMLTemplate string
+	dirPathCSS          string
 }
 
 func (t *impl) SetEngine(e *gin.Engine) {
@@ -24,6 +25,7 @@ func (t *impl) SetEngine(e *gin.Engine) {
 		func(ctx *gin.Context) { ctx.JSON(http.StatusOK, struct{}{}) },
 	)
 	e.LoadHTMLGlob(path.Join(t.dirPathHTMLTemplate, "*.html"))
+	e.Static("css", t.dirPathCSS)
 	e.Use(t.middlewareAdminAuthe)
 	e.GET("", t.pageIndex)
 }
@@ -39,5 +41,6 @@ func New(env *inject.Environment) (*impl, error) {
 		googleTagManagerID:  env.GoogleTagManagerID,
 		adminToken:          env.AdminToken,
 		dirPathHTMLTemplate: env.DirPathHTMLTemplate,
+		dirPathCSS:          env.DirPathCSS,
 	}, nil
 }

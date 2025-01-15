@@ -1,0 +1,57 @@
+body {
+    margin: 0;
+    /* https://fonts.google.com/noto/specimen/Noto+Sans+JP */
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 16px;
+    overflow-wrap: anywhere;
+}
+
+header {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    height: 42px;
+    border-bottom: 1px solid grey;
+}
+
+.content {
+    position: absolute;
+    overflow: scroll;
+    left: 0px;
+    top: 42px;
+    right: 0px;
+    bottom: 24px;
+}
+
+footer {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    height: 24px;
+    text-align: center;
+}
+
+a {
+    text-decoration: underline;
+}
+
+a:visited {
+    text-decoration: underline;
+    color: inherit;
+}
+
+a:link {
+    text-decoration: underline;
+    color: inherit;
+}
+
+a.disabled {
+    opacity: 0.5;
+    cursor: inherit;
+}
+
+a._link-title:link {
+    text-decoration: none;
+}

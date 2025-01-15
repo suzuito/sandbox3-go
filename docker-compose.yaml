@@ -37,6 +37,7 @@ services:
       GOOGLE_TAG_MANAGER_ID: dummy_tag_id
       ADMIN_TOKEN: dummy_admin_token
       DIR_PATH_HTML_TEMPLATE: go/internal/web
+      DIR_PATH_CSS: go/internal/web/_css
     depends_on:
       blog-db:
         condition: service_healthy

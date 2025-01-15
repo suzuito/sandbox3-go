@@ -7,10 +7,47 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/playwright-community/playwright-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/suzuito/sandbox2-common-go/libs/e2ehelpers"
 )
+
+type PlaywrightTestCaseForSSR struct {
+	Desc     string
+	Setup    func(t *testing.T, testID e2ehelpers.TestID, exe *PlaywrightTestCaseForSSRExec)
+	Teardown func(t *testing.T, testID e2ehelpers.TestID)
+}
+
+func (c *PlaywrightTestCaseForSSR) Run(t *testing.T) {
+	if c.Setup == nil {
+		panic(errors.New("setup function is required"))
+	}
+
+	err := playwright.Install()
+	require.NoError(t, err)
+
+	testID := e2ehelpers.NewTestID()
+	exe := PlaywrightTestCaseForSSRExec{}
+	c.Setup(t, testID, &exe)
+
+	pw, err := playwright.Run()
+	require.NoError(t, err)
+
+	browser, err := pw.Chromium.Launch()
+	require.NoError(t, err)
+
+	page, err := browser.NewPage()
+	require.NoError(t, err)
+
+	if exe.Do != nil {
+		exe.Do(t, pw, browser, page)
+	}
+}
+
+type PlaywrightTestCaseForSSRExec struct {
+	Do func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page)
+}
 
 type HTTPServerTestCase struct {
 	Desc     string
