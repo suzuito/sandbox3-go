@@ -4,6 +4,10 @@ BIN_AIR = $(shell go env GOPATH)/bin/air
 $(BIN_AIR):
 	go install github.com/air-verse/air@latest
 
+BIN_GOLANGCI_LINT = $(shell go env GOPATH)/bin/golangci-lint
+$(BIN_GOLANGCI_LINT):
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.62.2
+
 dist/prd/server: $(GO_SOURCES)
 	mkdir -p $(dir $@) && go build -o $@ go/cmd/$(notdir $@)/*.go
 
@@ -39,3 +43,7 @@ merge-test-report:
 	go tool covdata percent -i=cov/e2e/server,cov/go -o=textfmt.0.txt
 	go tool cover -html=textfmt.0.txt -o=gocov.html
 	go tool cover -func=textfmt.0.txt -o=gocovfunc.txt
+
+.PHONY: lint
+lint: $(BIN_GOLANGCI_LINT)
+	$(BIN_GOLANGCI_LINT) run ./...
