@@ -13,13 +13,13 @@
         top: 6px;
     }
 </style>
-<header class="component_header">
+<header class="component_header" data-e2e-val="header">
     <div class="component_header-title">
         <a href="/">otiuzu</a>
     </div>
     <nav class="component_header-nav">
         {{ if .ComponentHeader.IsAdmin }}
-        <a href="/admin">管理画面</a>
+        <a href="/admin" data-e2e-val="link-to-admin">管理画面</a>
         {{ end }}
         <a href="/articles">日記</a>
         <a href="/about">About</a>

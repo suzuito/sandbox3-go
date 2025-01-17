@@ -1,3 +1,7 @@
 dist/
 tmp/
 cov/
+
+gocov.html
+gocovfunc.txt
+textfmt.*.txt

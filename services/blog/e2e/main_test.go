@@ -16,7 +16,7 @@ func TestXxx(t *testing.T) {
 			Desc: "ok - GET /health",
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *PlaywrightTestCaseForSSRExec) {
 				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
-					res, err := page.Goto("http://localhost:9003/health")
+					res, err := page.Goto("http://localhost:8080/health")
 					require.NoError(t, err)
 
 					assert.Equal(t, http.StatusOK, res.Status())
@@ -28,11 +28,20 @@ func TestXxx(t *testing.T) {
 			Desc: "ok - GET /",
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *PlaywrightTestCaseForSSRExec) {
 				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
-					res, err := page.Goto("http://localhost:9003")
+					res, err := page.Goto("http://localhost:8080")
 					require.NoError(t, err)
 
 					assert.Equal(t, http.StatusOK, res.Status())
 					assert.Equal(t, "text/html; charset=utf-8", res.Headers()["content-type"])
+
+					locHeader := page.Locator(`[data-e2e-val="header"]`)
+					AssertElementExists(t, locHeader)
+
+					locLinkToAdmin := locHeader.Locator(`[data-e2e-val="link-to-admin"]`)
+					AssertElementNotExists(t, locLinkToAdmin)
+
+					locFooter := page.Locator(`[data-e2e-val="footer"]`)
+					AssertElementExists(t, locFooter)
 				}
 			},
 		},

@@ -25,7 +25,8 @@ services:
       blog-db:
         condition: service_healthy
   blog-server-e2e:
-    image: golang:1.23.4
+    build:
+      dockerfile: services/blog/Dockerfile.server.e2e
     working_dir: /sandbox3-go
     volumes:
       - ./:/sandbox3-go:rw

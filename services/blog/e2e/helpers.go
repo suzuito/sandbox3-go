@@ -49,6 +49,18 @@ type PlaywrightTestCaseForSSRExec struct {
 	Do func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page)
 }
 
+func AssertElementExists(t *testing.T, loc playwright.Locator) {
+	c, err := loc.Count()
+	require.NoError(t, err)
+	assert.Greaterf(t, c, 0, "element %+v does not exist", loc)
+}
+
+func AssertElementNotExists(t *testing.T, loc playwright.Locator) {
+	c, err := loc.Count()
+	require.NoError(t, err)
+	assert.Lessf(t, c, 1, "element %+v exists", loc)
+}
+
 type HTTPServerTestCase struct {
 	Desc     string
 	Setup    func(t *testing.T, testID e2ehelpers.TestID, expected *HTTPServerTestCaseExpected) *http.Request
