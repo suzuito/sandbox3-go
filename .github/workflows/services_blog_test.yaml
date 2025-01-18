@@ -14,5 +14,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: code-coverage-report
-          path: ga_artifacts
-      - run: sh fail-if-coverage-unsatisfied.sh 80
+          path: services/blog/ga_artifacts
+      - run: sh ../../fail-if-coverage-unsatisfied.sh 80
