@@ -48,27 +48,27 @@ type ldJSONDataAuthor struct {
 	URL  string `json:"url,omitempty"`
 }
 
-func newSiteMetaDataFromContext(
-	ctx *gin.Context,
-	siteOrigin url.URL,
-	title string,
-	description string,
-	t string,
-	image string,
-) *siteMetaData {
-	return &siteMetaData{
-		OGP: ogpData{
-			Title:       title,
-			Description: description,
-			Locale:      "ja_JP",
-			Type:        t,
-			URL:         newPageURLFromContext(ctx, siteOrigin),
-			Image:       image,
-			SiteName:    SiteName,
-		},
-		Canonical: newPageURLFromContext(ctx, siteOrigin),
-	}
-}
+// func newSiteMetaDataFromContext(
+// 	ctx *gin.Context,
+// 	siteOrigin url.URL,
+// 	title string,
+// 	description string,
+// 	t string,
+// 	image string,
+// ) *siteMetaData {
+// 	return &siteMetaData{
+// 		OGP: ogpData{
+// 			Title:       title,
+// 			Description: description,
+// 			Locale:      "ja_JP",
+// 			Type:        t,
+// 			URL:         newPageURLFromContext(ctx, siteOrigin),
+// 			Image:       image,
+// 			SiteName:    SiteName,
+// 		},
+// 		Canonical: newPageURLFromContext(ctx, siteOrigin),
+// 	}
+// }
 
 func newPageURLFromContext(ctx *gin.Context, siteOrigin url.URL) string {
 	if ctx.Request != nil {

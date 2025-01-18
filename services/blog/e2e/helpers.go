@@ -30,7 +30,7 @@ func (c *PlaywrightTestCaseForSSR) Run(t *testing.T) {
 
 	pw, err := playwright.Run()
 	require.NoError(t, err)
-	defer pw.Stop()
+	defer pw.Stop() //nolint:errcheck
 
 	browser, err := pw.Chromium.Launch()
 	require.NoError(t, err)

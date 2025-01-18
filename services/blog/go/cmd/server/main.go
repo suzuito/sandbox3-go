@@ -40,7 +40,7 @@ func RunServer(
 	}()
 
 	if err := server.ListenAndServe(); err != nil {
-		if !errors.Is(http.ErrServerClosed, err) {
+		if !errors.Is(err, http.ErrServerClosed) {
 			logger.Error("server.ListenAndServe() is failed", "err", err)
 			return 1
 		}
