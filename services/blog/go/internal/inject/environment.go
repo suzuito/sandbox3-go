@@ -6,4 +6,6 @@ type Environment struct {
 	AdminToken          string `required:"true" split_words:"true"`
 	DirPathHTMLTemplate string `required:"true" split_words:"true"`
 	DirPathCSS          string `required:"true" split_words:"true"`
+	LogLevel            string `split_words:"true"`
+	LoggerType          string `split_words:"true"`
 }

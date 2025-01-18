@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 	"testing"
 
 	"github.com/playwright-community/playwright-go"
@@ -9,6 +10,15 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/suzuito/sandbox2-common-go/libs/e2ehelpers"
 )
+
+func TestMain(m *testing.M) {
+	err := playwright.Install()
+	if err != nil {
+		panic(err)
+	}
+
+	os.Exit(m.Run())
+}
 
 func TestXxx(t *testing.T) {
 	cases := []PlaywrightTestCaseForSSR{

@@ -24,18 +24,17 @@ func (c *PlaywrightTestCaseForSSR) Run(t *testing.T) {
 		panic(errors.New("setup function is required"))
 	}
 
-	err := playwright.Install()
-	require.NoError(t, err)
-
 	testID := e2ehelpers.NewTestID()
 	exe := PlaywrightTestCaseForSSRExec{}
 	c.Setup(t, testID, &exe)
 
 	pw, err := playwright.Run()
 	require.NoError(t, err)
+	defer pw.Stop()
 
 	browser, err := pw.Chromium.Launch()
 	require.NoError(t, err)
+	defer browser.Close()
 
 	page, err := browser.NewPage()
 	require.NoError(t, err)

@@ -1,0 +1,12 @@
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/blog
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose up blog-test

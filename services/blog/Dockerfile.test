@@ -3,9 +3,11 @@ FROM golang:1.23.0
 RUN apt update
 RUN apt install -y curl sudo
 
-# install node.js
-# https://github.com/nodesource/distributions?tab=readme-ov-file#debian-and-ubuntu-based-distributions
+# install some deps for playwright
+
+## install node.js
+## https://github.com/nodesource/distributions?tab=readme-ov-file#debian-and-ubuntu-based-distributions
 RUN cd /tmp && curl -fsSL https://deb.nodesource.com/setup_23.x -o nodesource_setup.sh && sudo -E bash nodesource_setup.sh && sudo apt install -y nodejs
 
-# install deps for playwright
+## install deps for playwright
 RUN npx playwright install-deps

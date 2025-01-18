@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  # test:
-  #   uses: ./.github/workflows/_test.yaml
+  test:
+    uses: ./.github/workflows/services_blog_test.yaml
   lint:
     uses: ./.github/workflows/services_blog_lint.yaml

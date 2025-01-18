@@ -24,17 +24,12 @@ dist/e2e/server: $(GO_SOURCES)
 server-init-loc: $(BIN_AIR)
 	$(BIN_AIR) -c ./air.server.loc.toml
 
-.PHONY: server-init-e2e
-server-init-e2e: $(BIN_AIR)
-	mkdir -p cov/e2e/server && rm -f cov/e2e/server/*
-	GOCOVERDIR=cov/e2e/server $(BIN_AIR) -c ./air.server.e2e.toml
-
-.PHONY: server-e2e
-server-e2e:
-	go test -v ./e2e/...
-
 .PHONY: test
-test:
+test: dist/e2e/server
+	# E2E
+	mkdir -p cov/e2e/server && rm -f cov/e2e/server/*
+	GOCOVERDIR=cov/e2e/server sh ../../run-e2e.sh dist/e2e/server "sh ../../wait-until-http-health.sh http://localhost:8080/health" "go test -v -count=1 ./e2e/..."
+	# UT
 	mkdir -p cov/go && rm -f cov/go/*
 	go test -v -cover ./go/... -args -test.gocoverdir=$(abspath cov/go)
 

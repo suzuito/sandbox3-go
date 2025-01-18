@@ -24,15 +24,15 @@ services:
     depends_on:
       blog-db:
         condition: service_healthy
-  blog-server-e2e:
+  blog-test:
     build:
-      dockerfile: services/blog/Dockerfile.server.e2e
+      dockerfile: services/blog/Dockerfile.test
     working_dir: /sandbox3-go
     volumes:
       - ./:/sandbox3-go:rw
     ports:
       - 9003:8080
-    command: sh -c "cd services/blog && make server-init-e2e"
+    command: sh -c "cd services/blog && make test merge-test-report"
     environment:
       SITE_ORIGIN: http://localhost:9003
       GOOGLE_TAG_MANAGER_ID: dummy_tag_id
@@ -42,3 +42,8 @@ services:
     depends_on:
       blog-db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8080/health"]
+      interval: 3s
+      timeout: 60s
+      retries: 5
