@@ -1,36 +1,13 @@
 package inject
 
 import (
-	"context"
 	"fmt"
 	"log/slog"
 	"os"
 
 	"github.com/golang-cz/devslog"
-	"github.com/suzuito/sandbox2-common-go/libs/terrors"
+	"github.com/suzuito/sandbox2-common-go/libs/clog"
 )
-
-type CustomHandler struct {
-	slog.Handler
-}
-
-func (t *CustomHandler) Handle(ctx context.Context, r slog.Record) error {
-	r.Attrs(func(a slog.Attr) bool {
-		if a.Key == "err" {
-			terr, ok := a.Value.Any().(terrors.TraceableError)
-			if ok {
-				traceInfos := []string{}
-				for _, st := range terr.StackTrace() {
-					traceInfos = append(traceInfos, fmt.Sprintf("%s:%d", st.Filename, st.Line))
-				}
-				r.AddAttrs(slog.Attr{Key: "traceInfos", Value: slog.AnyValue(traceInfos)})
-			}
-			return false
-		}
-		return true
-	})
-	return t.Handler.Handle(ctx, r)
-}
 
 func NewLogger(env *Environment) *slog.Logger {
 	var level slog.Level
@@ -72,7 +49,7 @@ func NewLogger(env *Environment) *slog.Logger {
 		)
 	}
 
-	slogCustomHandler := CustomHandler{
+	slogCustomHandler := clog.CustomHandler{
 		Handler: slogHandler,
 	}
 	return slog.New(&slogCustomHandler)

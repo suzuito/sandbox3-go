@@ -21,10 +21,10 @@ func TestMain(m *testing.M) {
 }
 
 func TestXxx(t *testing.T) {
-	cases := []PlaywrightTestCaseForSSR{
+	cases := []e2ehelpers.PlaywrightTestCaseForSSR{
 		{
 			Desc: "ok - GET /health",
-			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *PlaywrightTestCaseForSSRExec) {
+			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
 				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
 					res, err := page.Goto("http://localhost:8080/health")
 					require.NoError(t, err)
@@ -36,7 +36,7 @@ func TestXxx(t *testing.T) {
 		},
 		{
 			Desc: "ok - GET /",
-			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *PlaywrightTestCaseForSSRExec) {
+			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
 				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
 					res, err := page.Goto("http://localhost:8080")
 					require.NoError(t, err)
@@ -45,13 +45,13 @@ func TestXxx(t *testing.T) {
 					assert.Equal(t, "text/html; charset=utf-8", res.Headers()["content-type"])
 
 					locHeader := page.Locator(`[data-e2e-val="header"]`)
-					AssertElementExists(t, locHeader)
+					e2ehelpers.AssertElementExists(t, locHeader)
 
 					locLinkToAdmin := locHeader.Locator(`[data-e2e-val="link-to-admin"]`)
-					AssertElementNotExists(t, locLinkToAdmin)
+					e2ehelpers.AssertElementNotExists(t, locLinkToAdmin)
 
 					locFooter := page.Locator(`[data-e2e-val="footer"]`)
-					AssertElementExists(t, locFooter)
+					e2ehelpers.AssertElementExists(t, locFooter)
 				}
 			},
 		},

@@ -10,7 +10,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/playwright-community/playwright-go v0.4901.0
 	github.com/stretchr/testify v1.10.0
-	github.com/suzuito/sandbox2-common-go v0.7.3
+	github.com/suzuito/sandbox2-common-go v0.8.0
 )
 
 require (

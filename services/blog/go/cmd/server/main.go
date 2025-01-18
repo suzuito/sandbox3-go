@@ -13,6 +13,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/suzuito/sandbox2-common-go/libs/utils"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/inject"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/web"
 )
@@ -77,7 +78,11 @@ func main() {
 		Handler: e.Handler(),
 	}
 
-	os.Exit(RunServer(
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	os.Exit(utils.RunHTTPServerWithGracefulShutdown(
+		ctx,
 		server,
 		logger,
 	))
