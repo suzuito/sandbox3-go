@@ -1,9 +1,0 @@
-[build]
-cmd = "make dist/e2e/server"
-bin = "./dist/e2e/server"
-include_dir = [
-    ""
-]
-exclude_dir = [
-]
-stop_on_error = true
