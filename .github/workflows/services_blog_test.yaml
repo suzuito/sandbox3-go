@@ -2,7 +2,7 @@ on:
   workflow_call:
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -10,3 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker compose up blog-test
+      - run: mkdir ga_artifacts && cp gocov.html ga_artifacts/ && cp gocovfunc.txt ga_artifacts/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: ga_artifacts
+      - run: sh fail-if-coverage-unsatisfied.sh 80
