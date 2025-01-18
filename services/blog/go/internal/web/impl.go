@@ -26,7 +26,7 @@ func (t *impl) SetEngine(e *gin.Engine) {
 	)
 	e.LoadHTMLGlob(path.Join(t.dirPathHTMLTemplate, "*.html"))
 	e.Static("css", t.dirPathCSS)
-	e.Use(t.middlewareAdminAuthe)
+	e.Use(t.middlewareAdminAuthn)
 	e.GET("", t.pageIndex)
 }
 

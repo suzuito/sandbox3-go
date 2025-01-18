@@ -21,6 +21,12 @@ services:
     ports:
       - 9001:8080
     command: sh -c "cd services/blog && make server-init-loc"
+    environment:
+      SITE_ORIGIN: http://localhost:9001
+      GOOGLE_TAG_MANAGER_ID: dummy_tag_id
+      ADMIN_TOKEN: dummy_admin_token
+      DIR_PATH_HTML_TEMPLATE: go/internal/web
+      DIR_PATH_CSS: go/internal/web/_css
     depends_on:
       blog-db:
         condition: service_healthy
@@ -33,12 +39,6 @@ services:
     ports:
       - 9003:8080
     command: sh -c "cd services/blog && make test merge-test-report"
-    environment:
-      SITE_ORIGIN: http://localhost:9003
-      GOOGLE_TAG_MANAGER_ID: dummy_tag_id
-      ADMIN_TOKEN: dummy_admin_token
-      DIR_PATH_HTML_TEMPLATE: go/internal/web
-      DIR_PATH_CSS: go/internal/web/_css
     depends_on:
       blog-db:
         condition: service_healthy

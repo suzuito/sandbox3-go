@@ -7,7 +7,7 @@ func middlewareXRobotsTag(ctx *gin.Context) {
 	ctx.Next()
 }
 
-func (t *impl) middlewareAdminAuthe(ctx *gin.Context) {
+func (t *impl) middlewareAdminAuthn(ctx *gin.Context) {
 	token, err := ctx.Cookie("admin_auth_token")
 	if err != nil {
 		return
