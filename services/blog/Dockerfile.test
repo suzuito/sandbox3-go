@@ -1,6 +1,7 @@
 FROM golang:1.23.0
 
 RUN apt update
+RUN apt upgrade -y
 RUN apt install -y curl sudo
 
 # install some deps for playwright

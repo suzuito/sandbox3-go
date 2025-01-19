@@ -13,6 +13,17 @@ services:
       interval: 3s
       timeout: 60s
       retries: 5
+  blog-db-init:
+    build:
+      dockerfile: services/blog/Dockerfile.db-init
+    working_dir: /sandbox3-go
+    volumes:
+      - ./:/sandbox3-go:rw
+    command: sh -c "cd services/blog && make db-init DB_HOST=blog-db DB_NAME=blog && make db-init DB_HOST=blog-db DB_NAME=blog_test"
+    depends_on:
+      blog-db:
+        condition: service_healthy
+        restart: true
   blog-server-loc:
     image: golang:1.23.4
     working_dir: /sandbox3-go
@@ -30,6 +41,8 @@ services:
     depends_on:
       blog-db:
         condition: service_healthy
+      blog-db-init:
+        condition: service_completed_successfully
   blog-test:
     build:
       dockerfile: services/blog/Dockerfile.test
@@ -42,4 +55,5 @@ services:
     depends_on:
       blog-db:
         condition: service_healthy
-
+      blog-db-init:
+        condition: service_completed_successfully
