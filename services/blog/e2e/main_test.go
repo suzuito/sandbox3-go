@@ -16,6 +16,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/suzuito/sandbox2-common-go/libs/e2ehelpers"
+	"github.com/suzuito/sandbox2-common-go/libs/utils"
 )
 
 func TestMain(m *testing.M) {
@@ -45,14 +46,15 @@ func TestXxx(t *testing.T) {
 		"LOGGER_TYPE=json",
 	}
 
+	ctx := context.Background()
+	shutdown := RunServer(ctx, filePathServerBin, &RunServerInput{Envs: envs}, healthCheck(ctx))
+	defer shutdown() //nolint:errcheck
+
 	cases := []e2ehelpers.PlaywrightTestCaseForSSR{
 		{
 			Desc: "ok - GET /health",
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
-				ctx := context.Background()
 				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
-					shutdown := RunServer(ctx, filePathServerBin, &RunServerInput{Envs: envs}, healthCheck(ctx))
-					defer shutdown()
 
 					res, err := page.Goto("http://localhost:8080/health")
 					require.NoError(t, err)
@@ -65,11 +67,7 @@ func TestXxx(t *testing.T) {
 		{
 			Desc: "ok - GET /",
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
-				ctx := context.Background()
 				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
-					shutdown := RunServer(ctx, filePathServerBin, &RunServerInput{Envs: envs}, healthCheck(ctx))
-					defer shutdown()
-
 					res, err := page.Goto("http://localhost:8080")
 					require.NoError(t, err)
 
@@ -81,6 +79,31 @@ func TestXxx(t *testing.T) {
 
 					locLinkToAdmin := locHeader.Locator(`[data-e2e-val="link-to-admin"]`)
 					e2ehelpers.AssertElementNotExists(t, locLinkToAdmin)
+
+					locFooter := page.Locator(`[data-e2e-val="footer"]`)
+					e2ehelpers.AssertElementExists(t, locFooter)
+				}
+			},
+		},
+		{
+			Desc: "ok - GET / as admin",
+			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
+				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
+					require.NoError(t, page.Context().AddCookies([]playwright.OptionalCookie{
+						{Name: "admin_auth_token", Value: "dummy_admin_token", URL: utils.Ptr("http://localhost:8080")},
+					}))
+
+					res, err := page.Goto("http://localhost:8080")
+					require.NoError(t, err)
+
+					assert.Equal(t, http.StatusOK, res.Status())
+					assert.Equal(t, "text/html; charset=utf-8", res.Headers()["content-type"])
+
+					locHeader := page.Locator(`[data-e2e-val="header"]`)
+					e2ehelpers.AssertElementExists(t, locHeader)
+
+					locLinkToAdmin := locHeader.Locator(`[data-e2e-val="link-to-admin"]`)
+					e2ehelpers.AssertElementExists(t, locLinkToAdmin)
 
 					locFooter := page.Locator(`[data-e2e-val="footer"]`)
 					e2ehelpers.AssertElementExists(t, locFooter)
