@@ -27,7 +27,12 @@ func (t *impl) SetEngine(e *gin.Engine) {
 	e.LoadHTMLGlob(path.Join(t.dirPathHTMLTemplate, "*.html"))
 	e.Static("css", t.dirPathCSS)
 	e.Use(t.middlewareAdminAuthn)
+
 	e.GET("", t.pageIndex)
+	{
+		gArticles := e.Group("articles")
+		gArticles.GET("", t.pageArticles)
+	}
 }
 
 func New(env *inject.Environment) (*impl, error) {

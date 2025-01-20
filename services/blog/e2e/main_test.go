@@ -34,7 +34,7 @@ func healthCheck(ctx context.Context) func() error {
 	}
 }
 
-func TestXxx(t *testing.T) {
+func TestBlogService(t *testing.T) {
 	filePathServerBin := os.Getenv("FILE_PATH_SERVER_BIN")
 	envs := []string{
 		"ENV=loc",
@@ -74,14 +74,7 @@ func TestXxx(t *testing.T) {
 					assert.Equal(t, http.StatusOK, res.Status())
 					assert.Equal(t, "text/html; charset=utf-8", res.Headers()["content-type"])
 
-					locHeader := page.Locator(`[data-e2e-val="header"]`)
-					e2ehelpers.AssertElementExists(t, locHeader)
-
-					locLinkToAdmin := locHeader.Locator(`[data-e2e-val="link-to-admin"]`)
-					e2ehelpers.AssertElementNotExists(t, locLinkToAdmin)
-
-					locFooter := page.Locator(`[data-e2e-val="footer"]`)
-					e2ehelpers.AssertElementExists(t, locFooter)
+					assertHeader(t, page, false)
 				}
 			},
 		},
@@ -99,14 +92,21 @@ func TestXxx(t *testing.T) {
 					assert.Equal(t, http.StatusOK, res.Status())
 					assert.Equal(t, "text/html; charset=utf-8", res.Headers()["content-type"])
 
-					locHeader := page.Locator(`[data-e2e-val="header"]`)
-					e2ehelpers.AssertElementExists(t, locHeader)
+					assertHeader(t, page, true)
+				}
+			},
+		},
+		{
+			Desc: "ok - GET /articles",
+			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
+				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
+					res, err := page.Goto("http://localhost:8080/articles")
+					require.NoError(t, err)
 
-					locLinkToAdmin := locHeader.Locator(`[data-e2e-val="link-to-admin"]`)
-					e2ehelpers.AssertElementExists(t, locLinkToAdmin)
+					assert.Equal(t, http.StatusOK, res.Status())
+					assert.Equal(t, "text/html; charset=utf-8", res.Headers()["content-type"])
 
-					locFooter := page.Locator(`[data-e2e-val="footer"]`)
-					e2ehelpers.AssertElementExists(t, locFooter)
+					assertHeader(t, page, false)
 				}
 			},
 		},
