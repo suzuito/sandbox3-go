@@ -12,6 +12,10 @@ BIN_GOLANG_MIGRATE = $(shell go env GOPATH)/bin/migrate
 $(BIN_GOLANG_MIGRATE):
 	go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
+BIN_SQLC = $(shell go env GOPATH)/bin/sqlc
+$(BIN_SQLC):
+	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+
 dist/prd/server: $(GO_SOURCES)
 	mkdir -p $(dir $@) && go build -o $@ go/cmd/$(notdir $@)/*.go
 
@@ -59,3 +63,7 @@ lint: $(BIN_GOLANGCI_LINT)
 .PHONY: create-migrate
 create-migrate: $(BIN_GOLANG_MIGRATE)
 	$(BIN_GOLANG_MIGRATE) create -ext sql -dir db/schema $(NAME)
+
+.PHONY: sqlc
+sqlc: $(BIN_SQLC)
+	$(BIN_SQLC) generate
