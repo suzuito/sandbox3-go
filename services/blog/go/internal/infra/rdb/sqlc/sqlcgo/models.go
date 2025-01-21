@@ -5,49 +5,57 @@
 package sqlcgo
 
 import (
-	"database/sql"
-	"time"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Article struct {
-	ID          string
+	ID          pgtype.UUID
 	Title       string
 	Published   bool
-	PublishedAt sql.NullTime
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	PublishedAt pgtype.Timestamp
+	CreatedAt   pgtype.Timestamp
+	UpdatedAt   pgtype.Timestamp
+	DeletedAt   pgtype.Timestamp
 }
 
 type ArticlesSearchIndex struct {
-	ArticleID   string
-	Tags        sql.NullString
+	ArticleID   pgtype.UUID
+	Tags        pgtype.Text
 	Published   bool
-	CreatedAt   time.Time
-	PublishedAt sql.NullTime
+	PublishedAt pgtype.Timestamp
+	CreatedAt   pgtype.Timestamp
+	UpdatedAt   pgtype.Timestamp
+	DeletedAt   pgtype.Timestamp
 }
 
 type File struct {
-	ID        string
-	Type      string
-	MediaType sql.NullString
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        pgtype.UUID
+	Name      string
+	Type      int16
+	MediaType pgtype.Text
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
+	DeletedAt pgtype.Timestamp
 }
 
 type FileThumbnail struct {
-	ID        string
-	FileID    string
-	MediaType sql.NullString
+	ID        pgtype.UUID
+	FileID    pgtype.UUID
+	MediaType pgtype.Text
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
+	DeletedAt pgtype.Timestamp
 }
 
-type MappingArticlesTag struct {
-	ArticleID string
-	TagID     string
+type RelArticlesTag struct {
+	ArticleID pgtype.UUID
+	TagID     pgtype.UUID
 }
 
 type Tag struct {
-	ID        string
+	ID        pgtype.UUID
 	Name      string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
+	DeletedAt pgtype.Timestamp
 }

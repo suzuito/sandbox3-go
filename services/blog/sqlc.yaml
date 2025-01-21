@@ -2,7 +2,8 @@ version: "2"
 sql:
 - schema: "db/schema"
   queries: "go/internal/infra/rdb/sqlc/queries"
-  engine: "mysql"
+  engine: "postgresql"
   gen:
     go:
       out: "go/internal/infra/rdb/sqlc/sqlcgo"
+      sql_package: "pgx/v5"

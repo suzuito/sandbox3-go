@@ -10,7 +10,7 @@ $(BIN_GOLANGCI_LINT):
 
 BIN_GOLANG_MIGRATE = $(shell go env GOPATH)/bin/migrate
 $(BIN_GOLANG_MIGRATE):
-	go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
 BIN_SQLC = $(shell go env GOPATH)/bin/sqlc
 $(BIN_SQLC):
@@ -34,9 +34,9 @@ server-init-loc: $(BIN_AIR)
 
 .PHONY: db-init
 db-init: $(BIN_GOLANG_MIGRATE)
-	mysql -u root -h $(DB_HOST) -P 3306 -e 'CREATE DATABASE IF NOT EXISTS `$(DB_NAME)`'
-	$(BIN_GOLANG_MIGRATE) -source file://./db/schema -database "mysql://root:@tcp($(DB_HOST):3306)/$(DB_NAME)" drop -f
-	$(BIN_GOLANG_MIGRATE) -source file://./db/schema -database "mysql://root:@tcp($(DB_HOST):3306)/$(DB_NAME)" up
+	PGPASSWORD=root psql -v ON_ERROR_STOP=1 -U root -h $(DB_HOST) -p 5432 -c 'CREATE DATABASE $(DB_NAME)' || true
+	$(BIN_GOLANG_MIGRATE) -source file://./db/schema -database "postgres://root:root@$(DB_HOST):5432/$(DB_NAME)?sslmode=disable" drop -f
+	$(BIN_GOLANG_MIGRATE) -source file://./db/schema -database "postgres://root:root@$(DB_HOST):5432/$(DB_NAME)?sslmode=disable" up
 
 .PHONY: test
 test: dist/e2e/server

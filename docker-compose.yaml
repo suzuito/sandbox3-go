@@ -1,15 +1,14 @@
 
 services:
   blog-db:
-    image: mysql:8.4.0-oraclelinux8
-    volumes:
-      - ./services/blog/db/etc/mysql/conf.d:/etc/mysql/conf.d:ro
+    image: postgres:17
     ports:
-      - 9002:3306
+      - 9004:5432
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root"]
+      test: ["CMD", "pg_isready", "-U", "root"]
       interval: 3s
       timeout: 60s
       retries: 5
