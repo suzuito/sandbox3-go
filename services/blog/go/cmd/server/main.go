@@ -34,7 +34,7 @@ func main() {
 	w.SetEngine(e)
 
 	server := &http.Server{
-		Addr:    ":8080",
+		Addr:    fmt.Sprintf(":%d", env.Port),
 		Handler: e.Handler(),
 	}
 

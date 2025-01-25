@@ -6,11 +6,12 @@
 package sqlcgo
 
 import (
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type CreateArticlesForTestParams struct {
-	ID          pgtype.UUID
+	ID          uuid.UUID
 	Title       string
 	Published   bool
 	PublishedAt pgtype.Timestamp

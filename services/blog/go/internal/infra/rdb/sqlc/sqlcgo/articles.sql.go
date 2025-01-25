@@ -8,16 +8,16 @@ package sqlcgo
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 const getArticle = `-- name: GetArticle :one
 SELECT id FROM articles
 `
 
-func (q *Queries) GetArticle(ctx context.Context) (pgtype.UUID, error) {
+func (q *Queries) GetArticle(ctx context.Context) (uuid.UUID, error) {
 	row := q.db.QueryRow(ctx, getArticle)
-	var id pgtype.UUID
+	var id uuid.UUID
 	err := row.Scan(&id)
 	return id, err
 }
