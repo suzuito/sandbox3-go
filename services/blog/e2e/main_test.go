@@ -105,6 +105,8 @@ func TestBlogService(t *testing.T) {
 	shutdown := RunServer(ctx, filePathServerBin, &RunServerInput{Envs: envs}, healthCheck(ctx))
 	defer shutdown() //nolint:errcheck
 
+	queries := sqlcgo.New(conn)
+
 	cases := []e2ehelpers.PlaywrightTestCaseForSSR{
 		{
 			Desc: "ok - GET /health",
@@ -155,7 +157,6 @@ func TestBlogService(t *testing.T) {
 			Desc: "ok - GET /articles",
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
 				// TODO 続きはここから 2025/01/25
-				queries := sqlcgo.New(conn)
 				queries.CreateArticlesForTest(ctx, []sqlcgo.CreateArticlesForTestParams{
 					{},
 				})
