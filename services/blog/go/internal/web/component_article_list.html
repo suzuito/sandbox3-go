@@ -1,0 +1,57 @@
+{{define "component_article_list"}}
+<style>
+  .component_article_list {
+    padding: 6px;
+  }
+
+  .component_article_list_article {
+    padding-bottom: 24px;
+  }
+
+  .component_article_list_article-title {
+    font-weight: bold;
+  }
+
+  .component_article_list_article-date {
+    font-size: 12px;
+  }
+
+  .component_article_list_article-tags {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .component_article_list_article-tag {
+    padding-right: 6px;
+  }
+</style>
+<div class="component_article_list">
+  {{range .Articles}}
+  <!--div class="component_article_list_article">
+    <div class="component_article_list_article-title">
+      <a href="/articles/{{.ID}}">
+        {{.Title}}
+        {{if eq .Published false}}
+        <span>(Draft)</span>
+        {{end}}
+      </a>
+    </div>
+    <div class="component_article_list_article-date">
+      {{if .PublishedAt}}
+      {{.PublishedAt.Format "2006-01-02"}}
+      {{end}}
+    </div>
+    <div class="component_article_list_article-tags">
+      {{range .Tags}}
+      <div class="component_article_list_article-tag">
+        <a href="/articles?tag={{.ID}}">
+          {{.Name}}
+        </a>
+      </div>
+      {{end}}
+    </div>
+  </div-->
+  {{end}}
+</div>
+{{end}}

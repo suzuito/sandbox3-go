@@ -13,6 +13,18 @@ sql:
             import: "github.com/google/uuid"
             type: "UUID"
 - schema: "db/schema"
+  queries: "go/cmd/db-init-loc/sqlc/queries"
+  engine: "postgresql"
+  gen:
+    go:
+      out: "go/cmd/db-init-loc/sqlc/sqlcgo"
+      sql_package: "pgx/v5"
+      overrides:
+        - db_type: "uuid"
+          go_type:
+            import: "github.com/google/uuid"
+            type: "UUID"
+- schema: "db/schema"
   queries: "e2e/queries"
   engine: "postgresql"
   gen:

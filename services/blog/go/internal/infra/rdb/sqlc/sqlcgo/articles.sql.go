@@ -9,15 +9,35 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const getArticle = `-- name: GetArticle :one
-SELECT id FROM articles
+const readArticlesByIDs = `-- name: ReadArticlesByIDs :many
+SELECT id, title, published_at FROM articles WHERE id = ANY($1::uuid[]) AND deleted_at IS NULL
 `
 
-func (q *Queries) GetArticle(ctx context.Context) (uuid.UUID, error) {
-	row := q.db.QueryRow(ctx, getArticle)
-	var id uuid.UUID
-	err := row.Scan(&id)
-	return id, err
+type ReadArticlesByIDsRow struct {
+	ID          uuid.UUID
+	Title       string
+	PublishedAt pgtype.Timestamp
+}
+
+func (q *Queries) ReadArticlesByIDs(ctx context.Context, dollar_1 []uuid.UUID) ([]ReadArticlesByIDsRow, error) {
+	rows, err := q.db.Query(ctx, readArticlesByIDs, dollar_1)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ReadArticlesByIDsRow
+	for rows.Next() {
+		var i ReadArticlesByIDsRow
+		if err := rows.Scan(&i.ID, &i.Title, &i.PublishedAt); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

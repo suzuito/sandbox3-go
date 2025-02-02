@@ -1,0 +1,12 @@
+{{define "component_article_list_pager"}}
+<div>
+    <div>
+      {{ if .ComponentArticleListPager.PrevPage }}
+      <a href="?page={{.ComponentArticleListPager.PrevPage}}">前へ</a>
+      {{ end }}
+      {{ if .ComponentArticleListPager.NextPage }}
+      <a href="?page={{.ComponentArticleListPager.NextPage}}">次へ</a>
+      {{ end }}
+    </div>
+  </div>
+{{end}}

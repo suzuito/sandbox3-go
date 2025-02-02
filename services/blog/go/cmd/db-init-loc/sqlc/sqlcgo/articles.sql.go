@@ -10,10 +10,11 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type CreateArticlesForTestParams struct {
+type CreateArticlesParams struct {
 	ID          uuid.UUID
 	Title       string
 	PublishedAt pgtype.Timestamp
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
+	DeletedAt   pgtype.Timestamp
 }

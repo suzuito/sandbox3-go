@@ -38,6 +38,10 @@ db-init: $(BIN_GOLANG_MIGRATE)
 	$(BIN_GOLANG_MIGRATE) -source file://./db/schema -database "postgres://root:root@$(DB_HOST):5432/$(DB_NAME)?sslmode=disable" drop -f
 	$(BIN_GOLANG_MIGRATE) -source file://./db/schema -database "postgres://root:root@$(DB_HOST):5432/$(DB_NAME)?sslmode=disable" up
 
+.PHONY: db-init-loc
+db-init-loc:
+	go run go/cmd/db-init-loc/*.go
+
 .PHONY: test
 test: dist/e2e/server
 	# E2E

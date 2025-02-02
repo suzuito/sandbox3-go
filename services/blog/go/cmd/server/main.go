@@ -10,7 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/suzuito/sandbox2-common-go/libs/utils"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/infra/rdb/repositories"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/inject"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/usecases"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/web"
 )
 
@@ -21,9 +23,20 @@ func main() {
 		os.Exit(1)
 	}
 
-	logger := inject.NewLogger(&env)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
 
-	w, err := web.New(&env)
+	logger := inject.NewLogger(&env)
+	pgxConn, err := inject.NewPgxConn(ctx, &env)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to create pgx connection: %v\n", err)
+		os.Exit(1)
+	}
+
+	repo := repositories.NewImpl(pgxConn)
+	uc := usecases.NewImpl(repo)
+
+	w, err := web.New(&env, logger, uc)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to new web: %v\n", err)
 		os.Exit(1)
@@ -37,9 +50,6 @@ func main() {
 		Addr:    fmt.Sprintf(":%d", env.Port),
 		Handler: e.Handler(),
 	}
-
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
-	defer stop()
 
 	os.Exit(utils.RunHTTPServerWithGracefulShutdown(
 		ctx,

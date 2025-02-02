@@ -1,3 +1,6 @@
 package web
 
-type componentArticleListPager struct{}
+type componentArticleListPager struct {
+	NextPage *int
+	PrevPage *int
+}

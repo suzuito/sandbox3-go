@@ -31,7 +31,6 @@ func (r iteratorForCreateArticlesForTest) Values() ([]interface{}, error) {
 	return []interface{}{
 		r.rows[0].ID,
 		r.rows[0].Title,
-		r.rows[0].Published,
 		r.rows[0].PublishedAt,
 		r.rows[0].CreatedAt,
 		r.rows[0].UpdatedAt,
@@ -43,5 +42,5 @@ func (r iteratorForCreateArticlesForTest) Err() error {
 }
 
 func (q *Queries) CreateArticlesForTest(ctx context.Context, arg []CreateArticlesForTestParams) (int64, error) {
-	return q.db.CopyFrom(ctx, []string{"articles"}, []string{"id", "title", "published", "published_at", "created_at", "updated_at"}, &iteratorForCreateArticlesForTest{rows: arg})
+	return q.db.CopyFrom(ctx, []string{"articles"}, []string{"id", "title", "published_at", "created_at", "updated_at"}, &iteratorForCreateArticlesForTest{rows: arg})
 }

@@ -12,7 +12,6 @@ import (
 type Article struct {
 	ID          uuid.UUID
 	Title       string
-	Published   bool
 	PublishedAt pgtype.Timestamp
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
@@ -21,12 +20,9 @@ type Article struct {
 
 type ArticlesSearchIndex struct {
 	ArticleID   uuid.UUID
-	Tags        pgtype.Text
-	Published   bool
+	TagIds      []uuid.UUID
 	PublishedAt pgtype.Timestamp
-	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
-	DeletedAt   pgtype.Timestamp
 }
 
 type File struct {

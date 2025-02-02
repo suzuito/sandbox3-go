@@ -19,9 +19,31 @@ services:
     volumes:
       - ./:/sandbox3-go:rw
     command: sh -c "cd services/blog && make db-init DB_HOST=blog-db DB_NAME=blog && make db-init DB_HOST=blog-db DB_NAME=blog_test"
+    environment:
+      DB_HOST: blog-db
+      DB_PORT: "5432"
+      DB_NAME: blog
+      DB_PASSWORD: root
+      DB_USER: root
     depends_on:
       blog-db:
         condition: service_healthy
+        restart: true
+  blog-db-init-loc:
+    image: golang:1.23.4
+    working_dir: /sandbox3-go
+    volumes:
+      - ./:/sandbox3-go:rw
+    command: sh -c "cd services/blog && make db-init-loc"
+    environment:
+      DB_HOST: blog-db
+      DB_PORT: "5432"
+      DB_NAME: blog
+      DB_PASSWORD: root
+      DB_USER: root
+    depends_on:
+      blog-db-init:
+        condition: service_completed_successfully
         restart: true
   blog-server-loc:
     image: golang:1.23.4
@@ -32,16 +54,24 @@ services:
       - 9001:8080
     command: sh -c "cd services/blog && make server-init-loc"
     environment:
+      ENV: loc
+      PORT: "8080"
       SITE_ORIGIN: http://localhost:9001
       GOOGLE_TAG_MANAGER_ID: dummy_tag_id
       ADMIN_TOKEN: dummy_admin_token
       DIR_PATH_HTML_TEMPLATE: go/internal/web
       DIR_PATH_CSS: go/internal/web/_css
+      LOG_LEVEL: debug
+      LOGGER_TYPE: devslog
+      DB_HOST: blog-db
+      DB_PORT: "5432"
+      DB_NAME: blog
+      DB_PASSWORD: root
+      DB_USER: root
     depends_on:
-      blog-db:
-        condition: service_healthy
-      blog-db-init:
+      blog-db-init-loc:
         condition: service_completed_successfully
+        restart: true
   blog-test:
     build:
       dockerfile: services/blog/Dockerfile.test
