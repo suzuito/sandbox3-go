@@ -1,6 +1,6 @@
 package web
 
 type componentArticleListPager struct {
-	NextPage *int
-	PrevPage *int
+	NextPage *uint16
+	PrevPage *uint16
 }

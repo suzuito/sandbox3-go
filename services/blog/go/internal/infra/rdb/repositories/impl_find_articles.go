@@ -16,7 +16,10 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 		conds.Count,
 		conds.Offset(),
 	}
-	sqlWhereClauses := []string{"1 = 1"}
+	sqlWhereClauses := []string{
+		"1 = 1",
+		"published_at IS NOT NULL",
+	}
 
 	if conds.PublishedAtRange.IsUsed() {
 		if conds.PublishedAtRange.Since != nil {

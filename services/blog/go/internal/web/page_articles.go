@@ -82,41 +82,51 @@ func (t *impl) pageGETArticles(ctx *gin.Context) {
 		Page:  DefaultQueryAsUint16(ctx, "page", 0),
 		Count: uint16(DefaultQueryAsUint64(ctx, "limit", 10)),
 	}
-	articles, _, err := t.articleUsecase.FindArticles(ctx, &conds)
+	articles, next, err := t.articleUsecase.FindArticles(ctx, &conds)
 	if err != nil {
 		t.pageError(ctx, err)
 		return
 	}
 
+	obj := pageGETArticles{
+		ComponentHeader: componentHeader{
+			IsAdmin: ctxGetAdmin(ctx),
+		},
+		ComponentCommonHead: componentCommonHead{
+			Title:              "記事一覧",
+			Meta:               nil,
+			GoogleTagManagerID: t.googleTagManagerID,
+		},
+		Breadcrumbs: breadcrumbs{
+			{
+				Path: "/",
+				URL:  newPageURL(t.siteOrigin, "/"),
+				Name: "トップページ",
+			},
+			{
+				Name:   "記事一覧",
+				NoLink: true,
+			},
+		},
+		Articles: articles,
+		// TODO 次はここから
+		ComponentArticleListPager: componentArticleListPager{
+			NextPage: nil,
+			PrevPage: nil,
+		},
+	}
+
+	if next != nil {
+		obj.ComponentArticleListPager.NextPage = &next.Page
+	}
+	if conds.Page >= 1 {
+		prevPage := conds.Page - 1
+		obj.ComponentArticleListPager.PrevPage = &prevPage
+	}
+
 	ctx.HTML(
 		http.StatusOK,
 		"page_articles.html",
-		pageGETArticles{
-			ComponentHeader: componentHeader{
-				IsAdmin: ctxGetAdmin(ctx),
-			},
-			ComponentCommonHead: componentCommonHead{
-				Title:              "記事一覧",
-				Meta:               nil,
-				GoogleTagManagerID: t.googleTagManagerID,
-			},
-			Breadcrumbs: breadcrumbs{
-				{
-					Path: "/",
-					URL:  newPageURL(t.siteOrigin, "/"),
-					Name: "トップページ",
-				},
-				{
-					Name:   "記事一覧",
-					NoLink: true,
-				},
-			},
-			Articles: articles,
-			// TODO 次はここから
-			ComponentArticleListPager: componentArticleListPager{
-				NextPage: nil,
-				PrevPage: nil,
-			},
-		},
+		&obj,
 	)
 }
