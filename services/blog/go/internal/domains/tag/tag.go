@@ -11,12 +11,20 @@ type IDs []ID
 
 type ID uuid.UUID
 
+func (t ID) String() string {
+	return uuid.UUID(t).String()
+}
+
 func NewIDFromString(s string) (ID, error) {
 	id, err := uuid.Parse(s)
 	if err != nil {
 		return ID{}, err
 	}
-	return ID(id), nil
+	return NewIDFromUUID(id), nil
+}
+
+func NewIDFromUUID(id uuid.UUID) ID {
+	return ID(id)
 }
 
 type Tag struct {

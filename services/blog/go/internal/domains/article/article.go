@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/suzuito/sandbox2-common-go/libs/terrors"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/tag"
 )
 
 type IDs []ID
@@ -27,14 +28,19 @@ func NewIDsFromUUIDs(ids []uuid.UUID) IDs {
 
 type ID uuid.UUID
 
+func (t ID) String() string {
+	return uuid.UUID(t).String()
+}
+
 type Article struct {
 	ID          ID
 	Title       string
 	PublishedAt *time.Time
+	Tags        tag.Tags
 }
 
 func (t *Article) ValidateAsDraft() error {
-	if err := validate.Struct(t); err != nil {
+	if err := t.validate(); err != nil {
 		return terrors.Wrap(err)
 	}
 
@@ -42,12 +48,24 @@ func (t *Article) ValidateAsDraft() error {
 }
 
 func (t *Article) ValidateAsPublished() error {
-	if err := validate.Struct(t); err != nil {
-		return terrors.Errorf("article is invalid: %w", err)
+	if err := t.validate(); err != nil {
+		return terrors.Wrap(err)
 	}
 
 	if t.Title == "" {
 		return terrors.Errorf("title is required as published article")
+	}
+
+	return nil
+}
+
+func (t *Article) validate() error {
+	if err := validate.Struct(t); err != nil {
+		return terrors.Errorf("article is invalid: %w", err)
+	}
+
+	if len(t.Tags) > 10 {
+		return terrors.Errorf("the number of tags is over than 10")
 	}
 
 	return nil

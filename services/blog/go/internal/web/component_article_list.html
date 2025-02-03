@@ -28,11 +28,11 @@
 </style>
 <div class="component_article_list">
   {{range .Articles}}
-  <!--div class="component_article_list_article">
+  <div class="component_article_list_article">
     <div class="component_article_list_article-title">
-      <a href="/articles/{{.ID}}">
+      <a href="/articles/{{.ID.String}}">
         {{.Title}}
-        {{if eq .Published false}}
+        {{if not .PublishedAt}}
         <span>(Draft)</span>
         {{end}}
       </a>
@@ -45,13 +45,13 @@
     <div class="component_article_list_article-tags">
       {{range .Tags}}
       <div class="component_article_list_article-tag">
-        <a href="/articles?tag={{.ID}}">
+        <a href="/articles?tag={{.ID.String}}">
           {{.Name}}
         </a>
       </div>
       {{end}}
     </div>
-  </div-->
+  </div>
   {{end}}
 </div>
 {{end}}

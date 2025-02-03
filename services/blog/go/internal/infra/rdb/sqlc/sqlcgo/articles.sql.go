@@ -13,13 +13,25 @@ import (
 )
 
 const readArticlesByIDs = `-- name: ReadArticlesByIDs :many
-SELECT id, title, published_at FROM articles WHERE id = ANY($1::uuid[]) AND deleted_at IS NULL
+SELECT
+  articles.id AS id,
+  articles.title AS title,
+  articles.published_at AS published_at,
+  array_agg(tags.id)::uuid[] AS tag_ids,
+  array_agg(tags.name)::text[] AS tag_names
+FROM articles
+LEFT JOIN rel_articles_tags ON articles.id = rel_articles_tags.article_id
+LEFT JOIN tags ON tags.id = rel_articles_tags.tag_id AND tags.deleted_at IS NULL
+WHERE articles.id = ANY($1::uuid[]) AND articles.deleted_at IS NULL
+GROUP BY articles.id, articles.title, articles.published_at
 `
 
 type ReadArticlesByIDsRow struct {
 	ID          uuid.UUID
 	Title       string
 	PublishedAt pgtype.Timestamp
+	TagIds      []uuid.UUID
+	TagNames    []string
 }
 
 func (q *Queries) ReadArticlesByIDs(ctx context.Context, dollar_1 []uuid.UUID) ([]ReadArticlesByIDsRow, error) {
@@ -31,7 +43,13 @@ func (q *Queries) ReadArticlesByIDs(ctx context.Context, dollar_1 []uuid.UUID) (
 	var items []ReadArticlesByIDsRow
 	for rows.Next() {
 		var i ReadArticlesByIDsRow
-		if err := rows.Scan(&i.ID, &i.Title, &i.PublishedAt); err != nil {
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.PublishedAt,
+			&i.TagIds,
+			&i.TagNames,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
