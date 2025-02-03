@@ -112,6 +112,7 @@ func (t *impl) pageGETArticles(ctx *gin.Context) {
 				},
 			},
 			Articles: articles,
+			// TODO 次はここから
 			ComponentArticleListPager: componentArticleListPager{
 				NextPage: nil,
 				PrevPage: nil,
