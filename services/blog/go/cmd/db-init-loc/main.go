@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
-	"github.com/suzuito/sandbox3-go/services/blog/go/cmd/db-init-loc/sqlc/sqlcgo"
 	infrasqlcgo "github.com/suzuito/sandbox3-go/services/blog/go/internal/infra/rdb/sqlc/sqlcgo"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/inject"
+	"github.com/suzuito/sandbox3-go/services/blog/testutils/sqlcgo"
 )
 
 type Environment struct {

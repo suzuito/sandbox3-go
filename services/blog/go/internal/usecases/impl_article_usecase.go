@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/suzuito/sandbox2-common-go/libs/terrors"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/article"
@@ -21,11 +20,6 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 	articles, err := t.articleRepository.ReadArticles(ctx, articleIDs)
 	if err != nil {
 		return nil, nil, terrors.Wrap(err)
-	}
-
-	fmt.Println("aaaaa")
-	for _, a := range articles {
-		fmt.Printf("%+v\n", a)
 	}
 
 	if len(articleIDs) != len(articles) {

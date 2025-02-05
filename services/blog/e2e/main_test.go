@@ -19,7 +19,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/suzuito/sandbox2-common-go/libs/e2ehelpers"
 	"github.com/suzuito/sandbox2-common-go/libs/utils"
-	"github.com/suzuito/sandbox3-go/services/blog/e2e/sqlcgo"
+	"github.com/suzuito/sandbox3-go/services/blog/testutils/sqlcgo"
 )
 
 type setting struct {
@@ -112,7 +112,6 @@ func TestBlogService(t *testing.T) {
 			Desc: "ok - GET /health",
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
 				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
-
 					res, err := page.Goto("http://localhost:8080/health")
 					require.NoError(t, err)
 
@@ -157,7 +156,7 @@ func TestBlogService(t *testing.T) {
 			Desc: "ok - GET /articles",
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
 				// TODO 続きはここから 2025/01/25
-				queries.CreateArticlesForTest(ctx, []sqlcgo.CreateArticlesForTestParams{
+				queries.CreateArticles(ctx, []sqlcgo.CreateArticlesParams{
 					{},
 				})
 				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
