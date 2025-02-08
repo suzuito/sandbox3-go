@@ -26,10 +26,11 @@
     padding-right: 6px;
   }
 </style>
-<div class="component_article_list">
+{{if .Articles}}
+<div class="component_article_list" data-e2e-val="articles">
   {{range .Articles}}
-  <div class="component_article_list_article">
-    <div class="component_article_list_article-title">
+  <div class="component_article_list_article" data-e2e-val="article">
+    <div class="component_article_list_article-title" data-e2e-val="article-title">
       <a href="/articles/{{.ID.String}}">
         {{.Title}}
         {{if not .PublishedAt}}
@@ -37,21 +38,24 @@
         {{end}}
       </a>
     </div>
-    <div class="component_article_list_article-date">
-      {{if .PublishedAt}}
+    {{if .PublishedAt}}
+    <div class="component_article_list_article-date" data-e2e-val="article-published-at">
       {{.PublishedAt.Format "2006-01-02"}}
-      {{end}}
     </div>
-    <div class="component_article_list_article-tags">
+    {{end}}
+    {{if .Tags}}
+    <div class="component_article_list_article-tags" data-e2e-val="tags">
       {{range .Tags}}
-      <div class="component_article_list_article-tag">
+      <div class="component_article_list_article-tag" data-e2e-val="tag">
         <a href="/articles?tag={{.ID.String}}">
           {{.Name}}
         </a>
       </div>
       {{end}}
     </div>
+    {{end}}
   </div>
   {{end}}
 </div>
+{{end}}
 {{end}}

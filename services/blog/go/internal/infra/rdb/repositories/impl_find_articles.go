@@ -34,7 +34,7 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 
 	if conds.TagID != nil {
 		args = append(args, conds.TagID)
-		sqlWhereClauses = append(sqlWhereClauses, "$%d = ANY (tag_ids)")
+		sqlWhereClauses = append(sqlWhereClauses, fmt.Sprintf("$%d = ANY (tag_ids)", len(args)))
 	}
 
 	sql := fmt.Sprintf(`

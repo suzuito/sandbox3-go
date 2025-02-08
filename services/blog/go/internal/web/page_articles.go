@@ -81,6 +81,10 @@ func (t *impl) pageGETArticles(ctx *gin.Context) {
 		TagID: tagID,
 		Page:  DefaultQueryAsUint16(ctx, "page", 0),
 		Count: uint16(DefaultQueryAsUint64(ctx, "limit", 10)),
+		PublishedAtRange: *article.NewFindConditionRangeFromTimestamp(
+			DefaultQueryAsInt64(ctx, "since", -1),
+			DefaultQueryAsInt64(ctx, "until", -1),
+		),
 	}
 	articles, next, err := t.articleUsecase.FindArticles(ctx, &conds)
 	if err != nil {
@@ -108,12 +112,8 @@ func (t *impl) pageGETArticles(ctx *gin.Context) {
 				NoLink: true,
 			},
 		},
-		Articles: articles,
-		// TODO 次はここから
-		ComponentArticleListPager: componentArticleListPager{
-			NextPage: nil,
-			PrevPage: nil,
-		},
+		Articles:                  articles,
+		ComponentArticleListPager: componentArticleListPager{},
 	}
 
 	if next != nil {

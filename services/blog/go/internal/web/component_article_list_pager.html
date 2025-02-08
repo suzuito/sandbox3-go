@@ -2,10 +2,10 @@
 <div>
     <div>
       {{ if .ComponentArticleListPager.PrevPage }}
-      <a href="?page={{.ComponentArticleListPager.PrevPage}}">前へ</a>
+      <a href="?page={{.ComponentArticleListPager.PrevPage}}" data-e2e-val="prev-page">前へ</a>
       {{ end }}
       {{ if .ComponentArticleListPager.NextPage }}
-      <a href="?page={{.ComponentArticleListPager.NextPage}}">次へ</a>
+      <a href="?page={{.ComponentArticleListPager.NextPage}}" data-e2e-val="next-page">次へ</a>
       {{ end }}
     </div>
   </div>

@@ -6,6 +6,8 @@
 package sqlcgo
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -16,4 +18,13 @@ type CreateTagsParams struct {
 	CreatedAt pgtype.Timestamp
 	UpdatedAt pgtype.Timestamp
 	DeletedAt pgtype.Timestamp
+}
+
+const deleteTagsPhysically = `-- name: DeleteTagsPhysically :exec
+DELETE FROM tags
+`
+
+func (q *Queries) DeleteTagsPhysically(ctx context.Context) error {
+	_, err := q.db.Exec(ctx, deleteTagsPhysically)
+	return err
 }

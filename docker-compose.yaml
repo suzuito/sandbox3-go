@@ -18,7 +18,7 @@ services:
     working_dir: /sandbox3-go
     volumes:
       - ./:/sandbox3-go:rw
-    command: sh -c "cd services/blog && make db-init DB_HOST=blog-db DB_NAME=blog && make db-init DB_HOST=blog-db DB_NAME=blog_test"
+    command: sh -c "cd services/blog && make db-init DB_NAME=blog"
     environment:
       DB_HOST: blog-db
       DB_PORT: "5432"
@@ -72,6 +72,23 @@ services:
       blog-db-init-loc:
         condition: service_completed_successfully
         restart: true
+  blog-db-init-test:
+    build:
+      dockerfile: services/blog/Dockerfile.db-init
+    working_dir: /sandbox3-go
+    volumes:
+      - ./:/sandbox3-go:rw
+    command: sh -c "cd services/blog && make db-init"
+    environment:
+      DB_HOST: blog-db
+      DB_PORT: "5432"
+      DB_NAME: blog_test
+      DB_PASSWORD: root
+      DB_USER: root
+    depends_on:
+      blog-db:
+        condition: service_healthy
+        restart: true
   blog-test:
     build:
       dockerfile: services/blog/Dockerfile.test
@@ -84,5 +101,5 @@ services:
     depends_on:
       blog-db:
         condition: service_healthy
-      blog-db-init:
+      blog-db-init-test:
         condition: service_completed_successfully

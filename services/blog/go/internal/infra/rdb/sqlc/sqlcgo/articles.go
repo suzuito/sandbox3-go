@@ -1,6 +1,7 @@
 package sqlcgo
 
 import (
+	"github.com/google/uuid"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/article"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/tag"
 )
@@ -23,6 +24,10 @@ func (t *ReadArticlesByIDsRow) ToArticle() *article.Article {
 	}
 
 	for i, tagID := range t.TagIds {
+		if tagID == uuid.Nil {
+			continue
+		}
+
 		a.Tags = append(a.Tags, &tag.Tag{
 			ID:   tag.NewIDFromUUID(tagID),
 			Name: t.TagNames[i],

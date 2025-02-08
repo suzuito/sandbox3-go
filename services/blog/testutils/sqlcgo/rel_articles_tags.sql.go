@@ -6,10 +6,21 @@
 package sqlcgo
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 )
 
 type CreateRelArticlesTagsParams struct {
 	ArticleID uuid.UUID
 	TagID     uuid.UUID
+}
+
+const deleteRelArticlesTagsPhysically = `-- name: DeleteRelArticlesTagsPhysically :exec
+DELETE FROM rel_articles_tags
+`
+
+func (q *Queries) DeleteRelArticlesTagsPhysically(ctx context.Context) error {
+	_, err := q.db.Exec(ctx, deleteRelArticlesTagsPhysically)
+	return err
 }

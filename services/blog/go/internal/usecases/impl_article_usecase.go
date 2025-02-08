@@ -17,6 +17,10 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 		return nil, nil, terrors.Wrap(err)
 	}
 
+	if len(articleIDs) <= 0 {
+		return article.Articles{}, nil, nil
+	}
+
 	articles, err := t.articleRepository.ReadArticles(ctx, articleIDs)
 	if err != nil {
 		return nil, nil, terrors.Wrap(err)

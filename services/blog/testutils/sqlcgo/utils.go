@@ -6,6 +6,10 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+func NewNilPgType() pgtype.Timestamp {
+	return NewPgTypeFromTimePtr(nil)
+}
+
 func NewPgTypeFromTime(t time.Time) pgtype.Timestamp {
 	return NewPgTypeFromTimePtr(&t)
 }

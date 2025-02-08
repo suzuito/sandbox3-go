@@ -11,9 +11,9 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.7.2
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/playwright-community/playwright-go v0.4901.0
+	github.com/playwright-community/playwright-go v0.4902.0
 	github.com/stretchr/testify v1.10.0
-	github.com/suzuito/sandbox2-common-go v0.8.0
+	github.com/suzuito/sandbox2-common-go v0.9.1
 )
 
 require (

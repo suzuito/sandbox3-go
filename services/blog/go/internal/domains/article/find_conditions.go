@@ -38,3 +38,22 @@ type FindConditionRange struct {
 func (t *FindConditionRange) IsUsed() bool {
 	return t.Since != nil || t.Until != nil
 }
+
+func NewFindConditionRangeFromTimestamp(
+	since int64,
+	until int64,
+) *FindConditionRange {
+	r := FindConditionRange{}
+
+	if since > 0 {
+		sinceTime := time.Unix(since, 0)
+		r.Since = &sinceTime
+	}
+
+	if until > 0 {
+		untilTime := time.Unix(until, 0)
+		r.Until = &untilTime
+	}
+
+	return &r
+}

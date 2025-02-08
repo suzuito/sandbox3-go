@@ -6,6 +6,8 @@
 package sqlcgo
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -17,4 +19,13 @@ type CreateArticlesParams struct {
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
 	DeletedAt   pgtype.Timestamp
+}
+
+const deleteArticlesPhysically = `-- name: DeleteArticlesPhysically :exec
+DELETE FROM articles
+`
+
+func (q *Queries) DeleteArticlesPhysically(ctx context.Context) error {
+	_, err := q.db.Exec(ctx, deleteArticlesPhysically)
+	return err
 }

@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
-	infrasqlcgo "github.com/suzuito/sandbox3-go/services/blog/go/internal/infra/rdb/sqlc/sqlcgo"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/inject"
 	"github.com/suzuito/sandbox3-go/services/blog/testutils/sqlcgo"
 )
@@ -95,8 +94,7 @@ func main() {
 	)
 	fmt.Printf("created rel articles tags: %d\n", createdRelArticlesTags)
 
-	prdQueries := infrasqlcgo.New(tx)
-	if err := prdQueries.UpseartArticleSearchIndices(ctx); err != nil {
+	if err := queries.UpsertAllArticleSearchIndices(ctx); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to create article search indices: %v\n", err)
 		panic(err)
 	}
