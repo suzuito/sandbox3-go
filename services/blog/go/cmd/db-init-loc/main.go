@@ -47,7 +47,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "failed to begin tx: %v\n", err)
 		panic(err)
 	}
-	defer tx.Rollback(ctx)
+	defer tx.Rollback(ctx) // nolint:errcheck
 
 	queries := sqlcgo.New(tx)
 
@@ -92,6 +92,10 @@ func main() {
 	createdRelArticlesTags, err := queries.CreateRelArticlesTags(
 		ctx, relArticlesTags,
 	)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to create rel article tags: %v\n", err)
+		panic(err)
+	}
 	fmt.Printf("created rel articles tags: %d\n", createdRelArticlesTags)
 
 	if err := queries.UpsertAllArticleSearchIndices(ctx); err != nil {

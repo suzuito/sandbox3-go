@@ -12,7 +12,7 @@ func RunTx(ctx context.Context, conn *pgx.Conn, f func(pgx.Tx) error) error {
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback(ctx)
+	defer tx.Rollback(ctx) // nolint:errcheck
 
 	if err := f(tx); err != nil {
 		return err
