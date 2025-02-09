@@ -7,7 +7,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/article"
-	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/tag"
 )
 
 type pageGETArticles struct {
@@ -67,20 +66,16 @@ func DefaultQueryAsUint16(ctx *gin.Context, key string, dflt uint16) uint16 {
 }
 
 func (t *impl) pageGETArticles(ctx *gin.Context) {
-	var tagID *tag.ID
-	tagIDAsString := ctx.DefaultQuery("tagId", "")
-	if tagIDAsString != "" {
-		tid, err := tag.NewIDFromString(tagIDAsString)
-		if err == nil {
-			ttid := tag.ID(tid)
-			tagID = &ttid
-		}
+	var tagName *string
+	tagString := ctx.DefaultQuery("tag", "")
+	if len(tagString) > 0 {
+		tagName = &tagString
 	}
 
 	conds := article.FindConditions{
-		TagID: tagID,
-		Page:  DefaultQueryAsUint16(ctx, "page", 0),
-		Count: uint16(DefaultQueryAsUint64(ctx, "limit", 10)),
+		TagName: tagName,
+		Page:    DefaultQueryAsUint16(ctx, "page", 0),
+		Count:   uint16(DefaultQueryAsUint64(ctx, "limit", 10)),
 		PublishedAtRange: *article.NewFindConditionRangeFromTimestamp(
 			DefaultQueryAsInt64(ctx, "since", -1),
 			DefaultQueryAsInt64(ctx, "until", -1),

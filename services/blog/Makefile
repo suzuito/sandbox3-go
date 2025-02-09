@@ -56,8 +56,9 @@ test: dist/e2e/server
 .PHONY: merge-test-report
 merge-test-report:
 	go tool covdata percent -i=cov/e2e/server,cov/go -o=textfmt.0.txt
-	go tool cover -html=textfmt.0.txt -o=gocov.html
-	go tool cover -func=textfmt.0.txt -o=gocovfunc.txt
+	grep -v .sql.go textfmt.0.txt > textfmt.1.txt
+	go tool cover -html=textfmt.1.txt -o=gocov.html
+	go tool cover -func=textfmt.1.txt -o=gocovfunc.txt
 
 .PHONY: lint
 lint: $(BIN_GOLANGCI_LINT)

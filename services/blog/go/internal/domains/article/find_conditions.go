@@ -2,12 +2,10 @@ package article
 
 import (
 	"time"
-
-	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/tag"
 )
 
 type FindConditions struct {
-	TagID            *tag.ID
+	TagName          *string
 	PublishedAtRange FindConditionRange
 
 	Page  uint16
@@ -16,7 +14,7 @@ type FindConditions struct {
 
 func (t *FindConditions) Next() *FindConditions {
 	return &FindConditions{
-		TagID: t.TagID,
+		TagName: t.TagName,
 		PublishedAtRange: FindConditionRange{
 			Since: t.PublishedAtRange.Since,
 			Until: t.PublishedAtRange.Until,

@@ -15,7 +15,7 @@ const upsertArticleSearchIndices = `-- name: UpsertArticleSearchIndices :many
 WITH t1 AS (
   SELECT
     articles.id AS article_id,
-    array_remove(array_agg(rel_articles_tags.tag_id), NULL) AS tag_ids,
+    array_agg(rel_articles_tags.tag_id) AS tag_ids,
     articles.published_at AS published_at
   FROM articles
   LEFT JOIN rel_articles_tags ON articles.id = rel_articles_tags.article_id

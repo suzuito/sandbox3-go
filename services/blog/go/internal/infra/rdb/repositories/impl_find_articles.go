@@ -9,9 +9,23 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/suzuito/sandbox2-common-go/libs/terrors"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/article"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/tag"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/infra/rdb/sqlc/sqlcgo"
 )
 
 func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) (article.IDs, error) {
+	queries := sqlcgo.New(t.conn)
+	var tagID *tag.ID
+	if conds.TagName != nil {
+		id, err := queries.ReadTagIDByName(ctx, *conds.TagName)
+		if err != nil {
+			return nil, terrors.Errorf("failed to read tag id by name: %w", err)
+		}
+
+		tid := tag.ID(id)
+		tagID = &tid
+	}
+
 	args := []any{
 		conds.Count,
 		conds.Offset(),
@@ -32,8 +46,8 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 		}
 	}
 
-	if conds.TagID != nil {
-		args = append(args, conds.TagID)
+	if tagID != nil {
+		args = append(args, tagID)
 		sqlWhereClauses = append(sqlWhereClauses, fmt.Sprintf("$%d = ANY (tag_ids)", len(args)))
 	}
 

@@ -24,6 +24,20 @@ func Test_GET_articles(t *testing.T) {
 
 	cases := []e2ehelpers.PlaywrightTestCaseForSSR{
 		{
+			Desc: `ng - GET /articles`,
+			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
+				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
+					res, err := page.Goto("http://localhost:8080/articles?tagId=hoge")
+					require.NoError(t, err)
+					require.Equal(t, http.StatusOK, res.Status())
+					WriteHTML(t, res)
+				}
+			},
+			Teardown: func(t *testing.T, testID e2ehelpers.TestID) {
+				MustTeardownDB(ctx, conn)
+			},
+		},
+		{
 			Desc: `ok - GET /articles - empty articles, check charset=utf-8, header`,
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
 				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
@@ -35,6 +49,11 @@ func Test_GET_articles(t *testing.T) {
 
 					require.Equal(t, "text/html; charset=utf-8", res.Headers()["content-type"])
 					assertHeader(t, page, false)
+
+					locsBreadcrumb := page.Locator(`[data-e2e-val="breadcrumb"]`)
+					require.Equal(t, 2, Count(t, locsBreadcrumb))
+					RequireElementInnerText(t, "トップページ ", locsBreadcrumb.Nth(0))
+					RequireElementInnerText(t, "記事一覧", locsBreadcrumb.Nth(1))
 
 					RequireElementNotExists(t, page.Locator(`[data-e2e-val="article"]`))
 				}
@@ -301,7 +320,7 @@ func Test_GET_articles(t *testing.T) {
 			},
 		},
 		{
-			Desc: `ok - GET /articles - find by tagId`,
+			Desc: `ok - GET /articles - find by tag`,
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
 				// tm1 := time.Date(2024, 4, 5, 6, 0, 0, 0, time.UTC)
 				MustSetupDB(
@@ -355,7 +374,7 @@ func Test_GET_articles(t *testing.T) {
 					},
 				)
 				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
-					res, err := page.Goto("http://localhost:8080/articles?tagId=545e447d-f4e6-4fbb-b428-e8133034720f")
+					res, err := page.Goto("http://localhost:8080/articles?tag=タグ1")
 					require.NoError(t, err)
 					require.Equal(t, http.StatusOK, res.Status())
 
