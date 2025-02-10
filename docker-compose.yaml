@@ -18,7 +18,7 @@ services:
     working_dir: /sandbox3-go
     volumes:
       - ./:/sandbox3-go:rw
-    command: sh -c "cd services/blog && make db-init DB_NAME=blog"
+    command: sh -c "cd services/blog && make db-init"
     environment:
       DB_HOST: blog-db
       DB_PORT: "5432"
