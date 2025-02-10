@@ -127,6 +127,8 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 					require.NoError(t, err)
 					require.Equal(t, http.StatusOK, res.Status())
 
+					WriteHTML(t, res)
+
 					locArticles := page.Locator(`[data-e2e-val="articles"]`)
 					e2ehelpers.AssertElementExists(t, locArticles)
 					locsArticle := AssertElementsCount(t, 2, locArticles.Locator(`[data-e2e-val="article"]`))
@@ -154,8 +156,6 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 							RequireElementInnerText(t, "タグ2", locTag)
 						}
 					}
-
-					WriteHTML(t, res)
 				}
 			},
 			Teardown: func(t *testing.T, testID e2ehelpers.TestID) {
