@@ -49,7 +49,9 @@ func Test_GET_articles(t *testing.T) {
 			},
 		},
 		{
-			Desc: "ok - GET /articles - check Article representation in HTML",
+			Desc: `ok - GET /articles - check Article representation in HTML
+article without tags, article with tags, deleted article is ignored, deleted tag is ignored
+			`,
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
 				MustSetupDB(
 					ctx,
@@ -72,6 +74,14 @@ func Test_GET_articles(t *testing.T) {
 								UpdatedAt:   sqlcgo.NewPgTypeFromTime(time.Unix(1, 1)),
 								DeletedAt:   sqlcgo.NewNilPgType(),
 							},
+							{
+								ID:          uuid.MustParse("272d11db-9e15-4ae1-a0d7-1ef91b80d855"),
+								Title:       "deleted",
+								PublishedAt: sqlcgo.NewPgTypeFromTime(time.Unix(1, 1)),
+								CreatedAt:   sqlcgo.NewPgTypeFromTime(time.Unix(1, 1)),
+								UpdatedAt:   sqlcgo.NewPgTypeFromTime(time.Unix(1, 1)),
+								DeletedAt:   sqlcgo.NewPgTypeFromTime(time.Unix(3, 1)),
+							},
 						},
 						Tags: sqlcgo.CreateTagsParamsList{
 							{
@@ -88,6 +98,13 @@ func Test_GET_articles(t *testing.T) {
 								UpdatedAt: sqlcgo.NewPgTypeFromTime(time.Unix(1, 1)),
 								DeletedAt: sqlcgo.NewNilPgType(),
 							},
+							{
+								ID:        uuid.MustParse("7b668c5c-9259-4a83-ae42-64f6d04eab69"),
+								Name:      "タグ3",
+								CreatedAt: sqlcgo.NewPgTypeFromTime(time.Unix(3, 1)),
+								UpdatedAt: sqlcgo.NewPgTypeFromTime(time.Unix(3, 1)),
+								DeletedAt: sqlcgo.NewPgTypeFromTime(time.Unix(4, 1)),
+							},
 						},
 						RelArticlesTags: sqlcgo.CreateRelArticlesTagsParamsList{
 							{
@@ -97,6 +114,10 @@ func Test_GET_articles(t *testing.T) {
 							{
 								ArticleID: uuid.MustParse("a8fc997b-65c3-4d62-b289-0bec281a5b1f"),
 								TagID:     uuid.MustParse("70401edb-975b-4f2e-b091-c34b72a1a38c"),
+							},
+							{
+								ArticleID: uuid.MustParse("a8fc997b-65c3-4d62-b289-0bec281a5b1f"),
+								TagID:     uuid.MustParse("7b668c5c-9259-4a83-ae42-64f6d04eab69"),
 							},
 						},
 					},
