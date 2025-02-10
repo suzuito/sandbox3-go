@@ -32,7 +32,7 @@ func Test_GET_index(t *testing.T) {
 					assert.Equal(t, http.StatusOK, res.Status())
 					assert.Equal(t, "text/html; charset=utf-8", res.Headers()["content-type"])
 
-					assertHeader(t, page, false)
+					requireHeader(t, page, false)
 				}
 			},
 		},
@@ -50,7 +50,7 @@ func Test_GET_index(t *testing.T) {
 					assert.Equal(t, http.StatusOK, res.Status())
 					assert.Equal(t, "text/html; charset=utf-8", res.Headers()["content-type"])
 
-					assertHeader(t, page, true)
+					requireHeader(t, page, true)
 				}
 			},
 		},

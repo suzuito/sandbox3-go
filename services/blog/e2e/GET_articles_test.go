@@ -34,7 +34,7 @@ func Test_GET_articles(t *testing.T) {
 					WriteHTML(t, res)
 
 					require.Equal(t, "text/html; charset=utf-8", res.Headers()["content-type"])
-					assertHeader(t, page, false)
+					requireHeader(t, page, false)
 
 					locsBreadcrumb := page.Locator(`[data-e2e-val="breadcrumb"]`)
 					require.Equal(t, 2, Count(t, locsBreadcrumb))
@@ -131,7 +131,7 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 
 					locArticles := page.Locator(`[data-e2e-val="articles"]`)
 					e2ehelpers.AssertElementExists(t, locArticles)
-					locsArticle := AssertElementsCount(t, 2, locArticles.Locator(`[data-e2e-val="article"]`))
+					locsArticle := RequireElementsCount(t, 2, locArticles.Locator(`[data-e2e-val="article"]`))
 					{
 						locArticle := locsArticle[0]
 						RequireElementInnerText(t, "published with no tags", locArticle.Locator(`[data-e2e-val="article-title"]`))
@@ -146,7 +146,7 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 						locTags := locArticle.Locator(`[data-e2e-val="tags"]`)
 						e2ehelpers.AssertElementExists(t, locTags)
 
-						locsTag := AssertElementsCount(t, 2, locTags.Locator(`[data-e2e-val="tag"]`))
+						locsTag := RequireElementsCount(t, 2, locTags.Locator(`[data-e2e-val="tag"]`))
 						{
 							locTag := locsTag[0]
 							RequireElementInnerText(t, "タグ1", locTag)

@@ -4,9 +4,7 @@ import (
 	"testing"
 
 	"github.com/playwright-community/playwright-go"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/suzuito/sandbox2-common-go/libs/e2ehelpers"
 )
 
 func RequireElementExists(
@@ -33,32 +31,32 @@ func RequireElementNotExists(
 	}
 }
 
-func assertHeader(
+func requireHeader(
 	t *testing.T,
 	page playwright.Page,
 	expectedAdminLinkExists bool,
 ) {
 	locHeader := page.Locator(`[data-e2e-val="header"]`)
-	e2ehelpers.AssertElementExists(t, locHeader)
+	RequireElementExists(t, locHeader)
 
 	locLinkToAdmin := locHeader.Locator(`[data-e2e-val="link-to-admin"]`)
 	if expectedAdminLinkExists {
-		e2ehelpers.AssertElementExists(t, locLinkToAdmin)
+		RequireElementExists(t, locLinkToAdmin)
 	} else {
-		e2ehelpers.AssertElementNotExists(t, locLinkToAdmin)
+		RequireElementNotExists(t, locLinkToAdmin)
 	}
 
 	locFooter := page.Locator(`[data-e2e-val="footer"]`)
-	e2ehelpers.AssertElementExists(t, locFooter)
+	RequireElementExists(t, locFooter)
 }
 
-func AssertElementsCount(t *testing.T, expectedElementCount int, loc playwright.Locator) []playwright.Locator {
+func RequireElementsCount(t *testing.T, expectedElementCount int, loc playwright.Locator) []playwright.Locator {
 	c, err := loc.Count()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	require.Equal(t, expectedElementCount, c)
 
 	elems, err := loc.All()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	return elems
 }
 
