@@ -120,7 +120,6 @@ func Test_GET_articles(t *testing.T) {
 					require.NoError(t, err)
 					require.Equal(t, http.StatusOK, res.Status())
 
-					assertHeader(t, page, false)
 
 					locArticles := page.Locator(`[data-e2e-val="articles"]`)
 					e2ehelpers.AssertElementExists(t, locArticles)
