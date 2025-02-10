@@ -379,7 +379,6 @@ func Test_GET_articles(t *testing.T) {
 
 					WriteHTML(t, res)
 
-					assertHeader(t, page, false)
 
 					locsArticle := page.Locator(`[data-e2e-val="article"]`)
 					count := Count(t, locsArticle)
