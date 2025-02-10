@@ -26,7 +26,6 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 
-	logger := inject.NewLogger(&env)
 	pgxConn, err := inject.NewPgxConn(ctx, &env)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to create pgx connection: %v\n", err)
@@ -35,6 +34,8 @@ func main() {
 
 	repo := repositories.NewImpl(pgxConn)
 	uc := usecases.NewImpl(repo)
+
+	logger := inject.NewLogger(&env)
 
 	w, err := web.New(&env, logger, uc)
 	if err != nil {
