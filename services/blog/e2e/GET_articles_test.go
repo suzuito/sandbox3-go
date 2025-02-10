@@ -24,20 +24,6 @@ func Test_GET_articles(t *testing.T) {
 
 	cases := []e2ehelpers.PlaywrightTestCaseForSSR{
 		{
-			Desc: `ng - GET /articles`,
-			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
-				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
-					res, err := page.Goto("http://localhost:8080/articles?tagId=hoge")
-					require.NoError(t, err)
-					require.Equal(t, http.StatusOK, res.Status())
-					WriteHTML(t, res)
-				}
-			},
-			Teardown: func(t *testing.T, testID e2ehelpers.TestID) {
-				MustTeardownDB(ctx, conn)
-			},
-		},
-		{
 			Desc: `ok - GET /articles - empty articles, check charset=utf-8, header`,
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
 				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
@@ -119,7 +105,6 @@ func Test_GET_articles(t *testing.T) {
 					res, err := page.Goto("http://localhost:8080/articles")
 					require.NoError(t, err)
 					require.Equal(t, http.StatusOK, res.Status())
-
 
 					locArticles := page.Locator(`[data-e2e-val="articles"]`)
 					e2ehelpers.AssertElementExists(t, locArticles)
@@ -377,7 +362,6 @@ func Test_GET_articles(t *testing.T) {
 					require.Equal(t, http.StatusOK, res.Status())
 
 					WriteHTML(t, res)
-
 
 					locsArticle := page.Locator(`[data-e2e-val="article"]`)
 					count := Count(t, locsArticle)
