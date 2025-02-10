@@ -25,6 +25,8 @@ type impl struct {
 }
 
 func (t *impl) SetEngine(e *gin.Engine) {
+	e.NoRoute(middlewareXRobotsTag, t.pageNoRoute)
+
 	e.GET(
 		"health",
 		middlewareXRobotsTag,
