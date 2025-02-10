@@ -321,7 +321,6 @@ func Test_GET_articles(t *testing.T) {
 		{
 			Desc: `ok - GET /articles - find by tag`,
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
-				// tm1 := time.Date(2024, 4, 5, 6, 0, 0, 0, time.UTC)
 				MustSetupDB(
 					ctx,
 					conn,
