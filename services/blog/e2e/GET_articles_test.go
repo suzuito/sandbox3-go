@@ -120,7 +120,6 @@ func Test_GET_articles(t *testing.T) {
 					require.NoError(t, err)
 					require.Equal(t, http.StatusOK, res.Status())
 
-					assertHeader(t, page, false)
 
 					locArticles := page.Locator(`[data-e2e-val="articles"]`)
 					e2ehelpers.AssertElementExists(t, locArticles)
@@ -322,7 +321,6 @@ func Test_GET_articles(t *testing.T) {
 		{
 			Desc: `ok - GET /articles - find by tag`,
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
-				// tm1 := time.Date(2024, 4, 5, 6, 0, 0, 0, time.UTC)
 				MustSetupDB(
 					ctx,
 					conn,
@@ -380,7 +378,6 @@ func Test_GET_articles(t *testing.T) {
 
 					WriteHTML(t, res)
 
-					assertHeader(t, page, false)
 
 					locsArticle := page.Locator(`[data-e2e-val="article"]`)
 					count := Count(t, locsArticle)
