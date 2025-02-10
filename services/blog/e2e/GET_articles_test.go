@@ -398,6 +398,55 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 			},
 		},
 		{
+			Desc: `ok - GET /articles - find by tag that doesn't exist`,
+			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
+				MustSetupDB(
+					ctx,
+					conn,
+					InitDBArg{
+						Articles: sqlcgo.CreateArticlesParamsList{
+							{
+								ID:          uuid.MustParse("fe91cdde-8dba-44be-8712-b5f6785caa46"),
+								Title:       "記事1",
+								PublishedAt: sqlcgo.NewPgTypeFromTime(time.Now()),
+								CreatedAt:   sqlcgo.NewPgTypeFromTime(time.Now()),
+								UpdatedAt:   sqlcgo.NewPgTypeFromTime(time.Now()),
+								DeletedAt:   sqlcgo.NewNilPgType(),
+							},
+						},
+						Tags: sqlcgo.CreateTagsParamsList{
+							{
+								ID:        uuid.MustParse("545e447d-f4e6-4fbb-b428-e8133034720f"),
+								Name:      "タグ1",
+								CreatedAt: sqlcgo.NewPgTypeFromTime(time.Now()),
+								UpdatedAt: sqlcgo.NewPgTypeFromTime(time.Now()),
+								DeletedAt: sqlcgo.NewNilPgType(),
+							},
+						},
+						RelArticlesTags: sqlcgo.CreateRelArticlesTagsParamsList{
+							{
+								ArticleID: uuid.MustParse("fe91cdde-8dba-44be-8712-b5f6785caa46"),
+								TagID:     uuid.MustParse("545e447d-f4e6-4fbb-b428-e8133034720f"),
+							},
+						},
+					},
+				)
+				exe.Do = func(t *testing.T, pw *playwright.Playwright, browser playwright.Browser, page playwright.Page) {
+					res, err := page.Goto("http://localhost:8080/articles?tag=タグxx")
+					require.NoError(t, err)
+					require.Equal(t, http.StatusOK, res.Status())
+
+					WriteHTML(t, res)
+
+					locsArticle := page.Locator(`[data-e2e-val="article"]`)
+					RequireElementNotExists(t, locsArticle)
+				}
+			},
+			Teardown: func(t *testing.T, testID e2ehelpers.TestID) {
+				MustTeardownDB(ctx, conn)
+			},
+		},
+		{
 			Desc: `ok - GET /articles - find by time range`,
 			Setup: func(t *testing.T, testID e2ehelpers.TestID, exe *e2ehelpers.PlaywrightTestCaseForSSRExec) {
 				tm := time.Unix(100, 0)

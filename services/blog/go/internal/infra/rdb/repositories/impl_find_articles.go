@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -19,7 +21,11 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 	if conds.TagName != nil {
 		id, err := queries.ReadTagIDByName(ctx, *conds.TagName)
 		if err != nil {
-			return nil, terrors.Errorf("failed to read tag id by name: %w", err)
+			if !errors.Is(err, sql.ErrNoRows) {
+				return nil, terrors.Errorf("failed to read tag id by name: %w", err)
+			}
+
+			id = uuid.New() // tagNameに一致するtagIDは存在していないので、新規作成する
 		}
 
 		tid := tag.ID(id)
