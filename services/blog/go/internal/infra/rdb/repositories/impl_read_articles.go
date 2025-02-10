@@ -29,9 +29,7 @@ func (t *impl) ReadArticles(ctx context.Context, ids article.IDs) (article.Artic
 	articles := make(article.Articles, 0, len(articlesByID))
 	for _, id := range ids {
 		articlesPerID := articlesByID[id]
-		for _, article := range articlesPerID {
-			articles = append(articles, article)
-		}
+		articles = append(articles, articlesPerID...)
 	}
 
 	return articles, nil
