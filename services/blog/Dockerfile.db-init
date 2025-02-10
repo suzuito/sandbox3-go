@@ -2,4 +2,6 @@ FROM golang:1.23.0
 
 RUN apt update
 RUN apt upgrade -y
-RUN apt install -y default-mysql-client
+RUN apt install -y postgresql-common
+RUN /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+RUN apt install -y postgresql-client-17

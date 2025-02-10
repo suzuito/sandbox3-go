@@ -10,7 +10,11 @@ $(BIN_GOLANGCI_LINT):
 
 BIN_GOLANG_MIGRATE = $(shell go env GOPATH)/bin/migrate
 $(BIN_GOLANG_MIGRATE):
-	go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
+BIN_SQLC = $(shell go env GOPATH)/bin/sqlc
+$(BIN_SQLC):
+	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 
 dist/prd/server: $(GO_SOURCES)
 	mkdir -p $(dir $@) && go build -o $@ go/cmd/$(notdir $@)/*.go
@@ -30,9 +34,13 @@ server-init-loc: $(BIN_AIR)
 
 .PHONY: db-init
 db-init: $(BIN_GOLANG_MIGRATE)
-	mysql -u root -h $(DB_HOST) -P 3306 -e 'CREATE DATABASE IF NOT EXISTS `$(DB_NAME)`'
-	$(BIN_GOLANG_MIGRATE) -source file://./db/schema -database "mysql://root:@tcp($(DB_HOST):3306)/$(DB_NAME)" drop -f
-	$(BIN_GOLANG_MIGRATE) -source file://./db/schema -database "mysql://root:@tcp($(DB_HOST):3306)/$(DB_NAME)" up
+	PGPASSWORD=root psql -v ON_ERROR_STOP=1 -U root -h $(DB_HOST) -p 5432 -c 'CREATE DATABASE $(DB_NAME)' || true
+	$(BIN_GOLANG_MIGRATE) -source file://./db/schema -database "postgres://root:root@$(DB_HOST):5432/$(DB_NAME)?sslmode=disable" drop -f
+	$(BIN_GOLANG_MIGRATE) -source file://./db/schema -database "postgres://root:root@$(DB_HOST):5432/$(DB_NAME)?sslmode=disable" up
+
+.PHONY: db-init-loc
+db-init-loc:
+	go run go/cmd/db-init-loc/*.go
 
 .PHONY: test
 test: dist/e2e/server
@@ -48,8 +56,9 @@ test: dist/e2e/server
 .PHONY: merge-test-report
 merge-test-report:
 	go tool covdata percent -i=cov/e2e/server,cov/go -o=textfmt.0.txt
-	go tool cover -html=textfmt.0.txt -o=gocov.html
-	go tool cover -func=textfmt.0.txt -o=gocovfunc.txt
+	grep -v .sql.go textfmt.0.txt > textfmt.1.txt
+	go tool cover -html=textfmt.1.txt -o=gocov.html
+	go tool cover -func=textfmt.1.txt -o=gocovfunc.txt
 
 .PHONY: lint
 lint: $(BIN_GOLANGCI_LINT)
@@ -59,3 +68,7 @@ lint: $(BIN_GOLANGCI_LINT)
 .PHONY: create-migrate
 create-migrate: $(BIN_GOLANG_MIGRATE)
 	$(BIN_GOLANG_MIGRATE) create -ext sql -dir db/schema $(NAME)
+
+.PHONY: sqlc
+sqlc: $(BIN_SQLC)
+	$(BIN_SQLC) generate

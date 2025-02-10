@@ -1,0 +1,26 @@
+version: "2"
+sql:
+- schema: "db/schema"
+  queries: "go/internal/infra/rdb/sqlc/queries"
+  engine: "postgresql"
+  gen:
+    go:
+      out: "go/internal/infra/rdb/sqlc/sqlcgo"
+      sql_package: "pgx/v5"
+      overrides:
+        - db_type: "uuid"
+          go_type:
+            import: "github.com/google/uuid"
+            type: "UUID"
+- schema: "db/schema"
+  queries: "testutils/queries"
+  engine: "postgresql"
+  gen:
+    go:
+      out: "testutils/sqlcgo"
+      sql_package: "pgx/v5"
+      overrides:
+        - db_type: "uuid"
+          go_type:
+            import: "github.com/google/uuid"
+            type: "UUID"

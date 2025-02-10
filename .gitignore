@@ -5,3 +5,5 @@ cov/
 gocov.html
 gocovfunc.txt
 textfmt.*.txt
+
+e2ehtmls/

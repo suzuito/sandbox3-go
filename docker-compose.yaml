@@ -1,15 +1,14 @@
 
 services:
   blog-db:
-    image: mysql:8.4.0-oraclelinux8
-    volumes:
-      - ./services/blog/db/etc/mysql/conf.d:/etc/mysql/conf.d:ro
+    image: postgres:17
     ports:
-      - 9002:3306
+      - 9004:5432
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root"]
+      test: ["CMD", "pg_isready", "-U", "root"]
       interval: 3s
       timeout: 60s
       retries: 5
@@ -19,10 +18,32 @@ services:
     working_dir: /sandbox3-go
     volumes:
       - ./:/sandbox3-go:rw
-    command: sh -c "cd services/blog && make db-init DB_HOST=blog-db DB_NAME=blog && make db-init DB_HOST=blog-db DB_NAME=blog_test"
+    command: sh -c "cd services/blog && make db-init"
+    environment:
+      DB_HOST: blog-db
+      DB_PORT: "5432"
+      DB_NAME: blog
+      DB_PASSWORD: root
+      DB_USER: root
     depends_on:
       blog-db:
         condition: service_healthy
+        restart: true
+  blog-db-init-loc:
+    image: golang:1.23.4
+    working_dir: /sandbox3-go
+    volumes:
+      - ./:/sandbox3-go:rw
+    command: sh -c "cd services/blog && make db-init-loc"
+    environment:
+      DB_HOST: blog-db
+      DB_PORT: "5432"
+      DB_NAME: blog
+      DB_PASSWORD: root
+      DB_USER: root
+    depends_on:
+      blog-db-init:
+        condition: service_completed_successfully
         restart: true
   blog-server-loc:
     image: golang:1.23.4
@@ -33,16 +54,41 @@ services:
       - 9001:8080
     command: sh -c "cd services/blog && make server-init-loc"
     environment:
+      ENV: loc
+      PORT: "8080"
       SITE_ORIGIN: http://localhost:9001
       GOOGLE_TAG_MANAGER_ID: dummy_tag_id
       ADMIN_TOKEN: dummy_admin_token
       DIR_PATH_HTML_TEMPLATE: go/internal/web
       DIR_PATH_CSS: go/internal/web/_css
+      LOG_LEVEL: debug
+      LOGGER_TYPE: devslog
+      DB_HOST: blog-db
+      DB_PORT: "5432"
+      DB_NAME: blog
+      DB_PASSWORD: root
+      DB_USER: root
+    depends_on:
+      blog-db-init-loc:
+        condition: service_completed_successfully
+        restart: true
+  blog-db-init-test:
+    build:
+      dockerfile: services/blog/Dockerfile.db-init
+    working_dir: /sandbox3-go
+    volumes:
+      - ./:/sandbox3-go:rw
+    command: sh -c "cd services/blog && make db-init"
+    environment:
+      DB_HOST: blog-db
+      DB_PORT: "5432"
+      DB_NAME: blog_test
+      DB_PASSWORD: root
+      DB_USER: root
     depends_on:
       blog-db:
         condition: service_healthy
-      blog-db-init:
-        condition: service_completed_successfully
+        restart: true
   blog-test:
     build:
       dockerfile: services/blog/Dockerfile.test
@@ -55,5 +101,5 @@ services:
     depends_on:
       blog-db:
         condition: service_healthy
-      blog-db-init:
+      blog-db-init-test:
         condition: service_completed_successfully
