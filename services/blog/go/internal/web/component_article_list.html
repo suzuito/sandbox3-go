@@ -31,7 +31,7 @@
   {{range .Articles}}
   <div class="component_article_list_article" data-e2e-val="article">
     <div class="component_article_list_article-title" data-e2e-val="article-title">
-      <a href="/articles/{{.ID.String}}" data-e2e-val="article-link">
+      <a href="./articles/{{.ID.String}}" data-e2e-val="article-link">
         {{.Title}}
         {{if not .PublishedAt}}
         <span>(Draft)</span>
@@ -47,7 +47,7 @@
     <div class="component_article_list_article-tags" data-e2e-val="tags">
       {{range .Tags}}
       <div class="component_article_list_article-tag" data-e2e-val="tag">
-        <a href="/articles?tag={{.Name}}" data-e2e-val="tag-link">
+        <a href="./articles?tag={{.Name}}" data-e2e-val="tag-link">
           {{.Name}}
         </a>
       </div>
