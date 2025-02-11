@@ -69,3 +69,9 @@ func RequireElementInnerText(t *testing.T, expected string, loc playwright.Locat
 	require.NoError(t, err)
 	require.Equal(t, expected, txt)
 }
+
+func RequireElementHasAttribute(t *testing.T, expected string, loc playwright.Locator, attr string) {
+	v, err := loc.GetAttribute(attr)
+	require.NoError(t, err)
+	require.Equal(t, expected, v)
+}
