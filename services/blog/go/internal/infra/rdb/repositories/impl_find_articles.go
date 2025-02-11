@@ -38,7 +38,10 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 	}
 	sqlWhereClauses := []string{
 		"1 = 1",
-		"published_at IS NOT NULL",
+	}
+
+	if conds.ExcludeDraft {
+		sqlWhereClauses = append(sqlWhereClauses, "published_at IS NOT NULL")
 	}
 
 	if conds.PublishedAtRange.IsUsed() {
