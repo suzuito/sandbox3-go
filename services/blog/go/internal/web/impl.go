@@ -42,6 +42,11 @@ func (t *impl) SetEngine(e *gin.Engine) {
 		gArticles.GET("", t.pageGETArticles)
 	}
 
+	{
+		gAdmin := e.Group("admin")
+		gAdmin.Use(middlewareXRobotsTag)
+		gAdmin.GET("", t.pageGETAdmin)
+	}
 }
 
 func New(
