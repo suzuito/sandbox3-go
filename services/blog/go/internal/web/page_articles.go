@@ -2,8 +2,6 @@ package web
 
 import (
 	"net/http"
-	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/article"
@@ -17,45 +15,50 @@ type pageGETArticles struct {
 	Breadcrumbs               breadcrumbs
 }
 
+/*
 // TODO 後でsandbox2-common-goへ移す
-func GetQueryAsUint[T uint | uint8 | uint16 | uint32 | uint64](ctx *gin.Context, key string) (T, bool) {
-	value, exists := ctx.GetQuery(key)
-	if !exists {
-		return 0, false
+
+	func GetQueryAsUint[T uint | uint8 | uint16 | uint32 | uint64](ctx *gin.Context, key string) (T, bool) {
+		value, exists := ctx.GetQuery(key)
+		if !exists {
+			return 0, false
+		}
+
+		i, err := strconv.ParseUint(value, 10, 64)
+		if err != nil {
+			return 0, false
+		}
+
+		return T(i), true
 	}
-
-	i, err := strconv.ParseUint(value, 10, 64)
-	if err != nil {
-		return 0, false
-	}
-
-	return T(i), true
-}
-
-// TODO 後でsandbox2-common-goへ移す
-func GetQueryAsInt[T int | int8 | int16 | int32 | int64](ctx *gin.Context, key string) (T, bool) {
-	value, exists := ctx.GetQuery(key)
-	if !exists {
-		return 0, false
-	}
-
-	i, err := strconv.ParseInt(value, 10, 64)
-	if err != nil {
-		return 0, false
-	}
-
-	return T(i), true
-}
 
 // TODO 後でsandbox2-common-goへ移す
-func GetQueryAsTimestamp(ctx *gin.Context, key string) (time.Time, bool) {
-	t, exists := GetQueryAsInt[int64](ctx, key)
-	if !exists {
-		return time.Unix(0, 0), false
+
+	func GetQueryAsInt[T int | int8 | int16 | int32 | int64](ctx *gin.Context, key string) (T, bool) {
+		value, exists := ctx.GetQuery(key)
+		if !exists {
+			return 0, false
+		}
+
+		i, err := strconv.ParseInt(value, 10, 64)
+		if err != nil {
+			return 0, false
+		}
+
+		return T(i), true
 	}
 
-	return time.Unix(t, 0), true
-}
+// TODO 後でsandbox2-common-goへ移す
+
+	func GetQueryAsTimestamp(ctx *gin.Context, key string) (time.Time, bool) {
+		t, exists := GetQueryAsInt[int64](ctx, key)
+		if !exists {
+			return time.Unix(0, 0), false
+		}
+
+		return time.Unix(t, 0), true
+	}
+*/
 
 func (t *impl) pageGETArticles(ctx *gin.Context) {
 	conds := article.NewFindConditionsFromQuery(ctx.Request.URL.Query())
