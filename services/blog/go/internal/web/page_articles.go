@@ -1,9 +1,9 @@
 package web
 
 import (
-	"math"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/article"
@@ -18,70 +18,49 @@ type pageGETArticles struct {
 }
 
 // TODO 後でsandbox2-common-goへ移す
-func DefaultQueryAsInt64(ctx *gin.Context, key string, dflt int64) int64 {
+func GetQueryAsUint[T uint | uint8 | uint16 | uint32 | uint64](ctx *gin.Context, key string) (T, bool) {
 	value, exists := ctx.GetQuery(key)
 	if !exists {
-		return dflt
+		return 0, false
+	}
+
+	i, err := strconv.ParseUint(value, 10, 64)
+	if err != nil {
+		return 0, false
+	}
+
+	return T(i), true
+}
+
+// TODO 後でsandbox2-common-goへ移す
+func GetQueryAsInt[T int | int8 | int16 | int32 | int64](ctx *gin.Context, key string) (T, bool) {
+	value, exists := ctx.GetQuery(key)
+	if !exists {
+		return 0, false
 	}
 
 	i, err := strconv.ParseInt(value, 10, 64)
 	if err != nil {
-		return dflt
+		return 0, false
 	}
 
-	return i
+	return T(i), true
 }
 
 // TODO 後でsandbox2-common-goへ移す
-func DefaultQueryAsUint64(ctx *gin.Context, key string, dflt uint64) uint64 {
-	value, exists := ctx.GetQuery(key)
+func GetQueryAsTimestamp(ctx *gin.Context, key string) (time.Time, bool) {
+	t, exists := GetQueryAsInt[int64](ctx, key)
 	if !exists {
-		return dflt
+		return time.Unix(0, 0), false
 	}
 
-	i, err := strconv.ParseUint(value, 10, 64)
-	if err != nil {
-		return dflt
-	}
-
-	return i
-}
-
-func DefaultQueryAsUint16(ctx *gin.Context, key string, dflt uint16) uint16 {
-	value, exists := ctx.GetQuery(key)
-	if !exists {
-		return dflt
-	}
-
-	i, err := strconv.ParseUint(value, 10, 64)
-	if err != nil {
-		return dflt
-	}
-
-	if i > math.MaxUint16 {
-		return dflt
-	}
-
-	return uint16(i)
+	return time.Unix(t, 0), true
 }
 
 func (t *impl) pageGETArticles(ctx *gin.Context) {
-	var tagName *string
-	tagString := ctx.DefaultQuery("tag", "")
-	if len(tagString) > 0 {
-		tagName = &tagString
-	}
+	conds := article.NewFindConditionsFromQuery(ctx.Request.URL.Query())
 
-	conds := article.FindConditions{
-		TagName: tagName,
-		Page:    DefaultQueryAsUint16(ctx, "page", 0),
-		Count:   uint16(DefaultQueryAsUint64(ctx, "limit", 10)),
-		PublishedAtRange: *article.NewFindConditionRangeFromTimestamp(
-			DefaultQueryAsInt64(ctx, "since", -1),
-			DefaultQueryAsInt64(ctx, "until", -1),
-		),
-	}
-	articles, next, err := t.articleUsecase.FindArticles(ctx, &conds)
+	articles, next, prev, err := t.articleUsecase.FindArticles(ctx, conds)
 	if err != nil {
 		t.pageError(ctx, err)
 		return
@@ -112,11 +91,10 @@ func (t *impl) pageGETArticles(ctx *gin.Context) {
 	}
 
 	if next != nil {
-		obj.ComponentArticleListPager.NextPage = &next.Page
+		obj.ComponentArticleListPager.NextURL = next.URL()
 	}
-	if conds.Page >= 1 {
-		prevPage := conds.Page - 1
-		obj.ComponentArticleListPager.PrevPage = &prevPage
+	if prev != nil {
+		obj.ComponentArticleListPager.PrevURL = prev.URL()
 	}
 
 	ctx.HTML(

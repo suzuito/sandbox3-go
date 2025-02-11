@@ -1,6 +1,8 @@
 package web
 
+import "net/url"
+
 type componentArticleListPager struct {
-	NextPage *uint16
-	PrevPage *uint16
+	NextURL *url.URL
+	PrevURL *url.URL
 }
