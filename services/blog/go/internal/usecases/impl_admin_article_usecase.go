@@ -7,14 +7,12 @@ import (
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/article"
 )
 
-func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) (
+func (t *impl) FindAdminArticles(ctx context.Context, conds *article.FindConditions) (
 	article.Articles,
 	*article.FindConditions,
 	*article.FindConditions,
 	error,
 ) {
-	conds.ExcludeDraft = true
-
 	articleIDs, err := t.articleRepository.FindArticles(ctx, conds)
 	if err != nil {
 		return nil, nil, nil, terrors.Wrap(err)

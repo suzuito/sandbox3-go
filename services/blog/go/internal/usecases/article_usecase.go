@@ -12,4 +12,8 @@ type ArticleUsecase interface {
 		ctx context.Context,
 		cond *article.FindConditions,
 	) (articles article.Articles, next *article.FindConditions, prev *article.FindConditions, err error)
+	FindAdminArticles(
+		ctx context.Context,
+		cond *article.FindConditions,
+	) (articles article.Articles, next *article.FindConditions, prev *article.FindConditions, err error)
 }

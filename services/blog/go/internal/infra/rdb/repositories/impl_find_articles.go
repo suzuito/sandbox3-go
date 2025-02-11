@@ -38,7 +38,10 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 	}
 	sqlWhereClauses := []string{
 		"1 = 1",
-		"published_at IS NOT NULL",
+	}
+
+	if conds.ExcludeDraft {
+		sqlWhereClauses = append(sqlWhereClauses, "published_at IS NOT NULL")
 	}
 
 	if conds.PublishedAtRange.IsUsed() {
@@ -60,7 +63,7 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 	sql := fmt.Sprintf(`
 	SELECT article_id FROM articles_search_indices
 	WHERE %s
-	ORDER BY published_at DESC
+	ORDER BY published_at DESC, updated_at DESC
 	LIMIT $1
 	OFFSET $2`, strings.Join(sqlWhereClauses, " AND "))
 	rows, err := t.conn.Query(
