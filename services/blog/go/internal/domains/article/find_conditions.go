@@ -73,9 +73,7 @@ func (t *FindConditions) Query() url.Values {
 	if t.TagName != nil {
 		q.Set("tag", *t.TagName)
 	}
-	if t.Page != defaultFindConditionPage {
-		q.Set("page", strconv.FormatUint(uint64(t.Page), 10))
-	}
+	q.Set("page", strconv.FormatUint(uint64(t.Page), 10))
 	if t.Count != defaultFindConditionCount {
 		q.Set("limit", strconv.FormatUint(uint64(t.Count), 10))
 	}
