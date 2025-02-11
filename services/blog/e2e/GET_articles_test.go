@@ -136,12 +136,14 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 						locArticle := locsArticle[0]
 						RequireElementInnerText(t, "published with no tags", locArticle.Locator(`[data-e2e-val="article-title"]`))
 						RequireElementInnerText(t, "1970-01-01", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
+						RequireElementHasAttribute(t, "/articles/f3f17eb5-c083-4df4-a022-cc3ddbed6826", locArticle.Locator(`[data-e2e-val="article-link"]`), "href")
 						e2ehelpers.AssertElementNotExists(t, locArticle.Locator(`[data-e2e-val="tags"]`))
 					}
 					{
 						locArticle := locsArticle[1]
 						RequireElementInnerText(t, "published with tags", locArticle.Locator(`[data-e2e-val="article-title"]`))
 						RequireElementInnerText(t, "1970-01-01", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
+						RequireElementHasAttribute(t, "/articles/a8fc997b-65c3-4d62-b289-0bec281a5b1f", locArticle.Locator(`[data-e2e-val="article-link"]`), "href")
 
 						locTags := locArticle.Locator(`[data-e2e-val="tags"]`)
 						e2ehelpers.AssertElementExists(t, locTags)
@@ -150,10 +152,12 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 						{
 							locTag := locsTag[0]
 							RequireElementInnerText(t, "タグ1", locTag)
+							RequireElementHasAttribute(t, `/articles?tag=%e3%82%bf%e3%82%b01`, locTag.Locator(`[data-e2e-val="tag-link"]`), "href")
 						}
 						{
 							locTag := locsTag[1]
 							RequireElementInnerText(t, "タグ2", locTag)
+							RequireElementHasAttribute(t, `/articles?tag=%e3%82%bf%e3%82%b02`, locTag.Locator(`[data-e2e-val="tag-link"]`), "href")
 						}
 					}
 				}

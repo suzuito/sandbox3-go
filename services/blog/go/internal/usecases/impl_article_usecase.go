@@ -10,24 +10,25 @@ import (
 func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) (
 	article.Articles,
 	*article.FindConditions,
+	*article.FindConditions,
 	error,
 ) {
 	articleIDs, err := t.articleRepository.FindArticles(ctx, conds)
 	if err != nil {
-		return nil, nil, terrors.Wrap(err)
+		return nil, nil, nil, terrors.Wrap(err)
 	}
 
 	if len(articleIDs) <= 0 {
-		return article.Articles{}, nil, nil
+		return article.Articles{}, nil, nil, nil
 	}
 
 	articles, err := t.articleRepository.ReadArticles(ctx, articleIDs)
 	if err != nil {
-		return nil, nil, terrors.Wrap(err)
+		return nil, nil, nil, terrors.Wrap(err)
 	}
 
 	if len(articleIDs) != len(articles) {
-		return nil, nil, terrors.Errorf("some article ids are not found")
+		return nil, nil, nil, terrors.Errorf("some article ids are not found")
 	}
 
 	var next *article.FindConditions
@@ -35,5 +36,10 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 		next = conds.Next()
 	}
 
-	return articles, next, nil
+	var prev *article.FindConditions
+	if conds.Page > 0 {
+		prev = conds.Prev()
+	}
+
+	return articles, next, prev, nil
 }
