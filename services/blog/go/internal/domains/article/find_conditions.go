@@ -14,6 +14,7 @@ const (
 type FindConditions struct {
 	TagName          *string
 	PublishedAtRange FindConditionRange
+	ExcludeDraft     bool
 
 	Page  uint16
 	Count uint16
@@ -65,6 +66,9 @@ func (t *FindConditions) ParseQuery(q url.Values) {
 		until := time.Unix(v, 0)
 		t.PublishedAtRange.Until = &until
 	}
+	if q.Has("exclude_draft") {
+		t.ExcludeDraft = true
+	}
 }
 
 func (t *FindConditions) Query() url.Values {
@@ -82,6 +86,9 @@ func (t *FindConditions) Query() url.Values {
 	}
 	if t.PublishedAtRange.Until != nil {
 		q.Set("until", strconv.FormatInt(t.PublishedAtRange.Until.Unix(), 10))
+	}
+	if t.ExcludeDraft {
+		q.Set("exclude_draft", "")
 	}
 
 	return q
@@ -103,6 +110,13 @@ func newDefaultFindConditions() *FindConditions {
 }
 
 func NewFindConditionsFromQuery(q url.Values) *FindConditions {
+	fd := newDefaultFindConditions()
+	fd.ParseQuery(q)
+	fd.ExcludeDraft = true
+	return fd
+}
+
+func NewAdminFindConditionsFromQuery(q url.Values) *FindConditions {
 	fd := newDefaultFindConditions()
 	fd.ParseQuery(q)
 	return fd

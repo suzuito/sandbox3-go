@@ -136,14 +136,14 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 						locArticle := locsArticle[0]
 						RequireElementInnerText(t, "published with no tags", locArticle.Locator(`[data-e2e-val="article-title"]`))
 						RequireElementInnerText(t, "1970-01-01", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
-						RequireElementHasAttribute(t, "/articles/f3f17eb5-c083-4df4-a022-cc3ddbed6826", locArticle.Locator(`[data-e2e-val="article-link"]`), "href")
+						RequireElementHasAttribute(t, "./articles/f3f17eb5-c083-4df4-a022-cc3ddbed6826", locArticle.Locator(`[data-e2e-val="article-link"]`), "href")
 						e2ehelpers.AssertElementNotExists(t, locArticle.Locator(`[data-e2e-val="tags"]`))
 					}
 					{
 						locArticle := locsArticle[1]
 						RequireElementInnerText(t, "published with tags", locArticle.Locator(`[data-e2e-val="article-title"]`))
 						RequireElementInnerText(t, "1970-01-01", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
-						RequireElementHasAttribute(t, "/articles/a8fc997b-65c3-4d62-b289-0bec281a5b1f", locArticle.Locator(`[data-e2e-val="article-link"]`), "href")
+						RequireElementHasAttribute(t, "./articles/a8fc997b-65c3-4d62-b289-0bec281a5b1f", locArticle.Locator(`[data-e2e-val="article-link"]`), "href")
 
 						locTags := locArticle.Locator(`[data-e2e-val="tags"]`)
 						e2ehelpers.AssertElementExists(t, locTags)
@@ -152,12 +152,12 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 						{
 							locTag := locsTag[0]
 							RequireElementInnerText(t, "タグ1", locTag)
-							RequireElementHasAttribute(t, `/articles?tag=%e3%82%bf%e3%82%b01`, locTag.Locator(`[data-e2e-val="tag-link"]`), "href")
+							RequireElementHasAttribute(t, `./articles?tag=%e3%82%bf%e3%82%b01`, locTag.Locator(`[data-e2e-val="tag-link"]`), "href")
 						}
 						{
 							locTag := locsTag[1]
 							RequireElementInnerText(t, "タグ2", locTag)
-							RequireElementHasAttribute(t, `/articles?tag=%e3%82%bf%e3%82%b02`, locTag.Locator(`[data-e2e-val="tag-link"]`), "href")
+							RequireElementHasAttribute(t, `./articles?tag=%e3%82%bf%e3%82%b02`, locTag.Locator(`[data-e2e-val="tag-link"]`), "href")
 						}
 					}
 				}
@@ -204,8 +204,8 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 						{
 							locArticle := loc.Nth(count - 1)
 							RequireElementExists(t, locArticle)
-							RequireElementInnerText(t, "テスト記事23", locArticle.Locator(`[data-e2e-val="article-title"]`))
-							RequireElementInnerText(t, "1970-01-24", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
+							RequireElementInnerText(t, "テスト記事21", locArticle.Locator(`[data-e2e-val="article-title"]`))
+							RequireElementInnerText(t, "1970-01-22", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
 						}
 
 						locPrevPage := page.Locator(`[data-e2e-val="prev-page"]`)
@@ -234,14 +234,14 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 						{
 							locArticle := loc.Nth(0)
 							RequireElementExists(t, locArticle)
-							RequireElementInnerText(t, "テスト記事22", locArticle.Locator(`[data-e2e-val="article-title"]`))
-							RequireElementInnerText(t, "1970-01-23", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
+							RequireElementInnerText(t, "テスト記事19", locArticle.Locator(`[data-e2e-val="article-title"]`))
+							RequireElementInnerText(t, "1970-01-20", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
 						}
 						{
 							locArticle := loc.Nth(count - 1)
 							RequireElementExists(t, locArticle)
-							RequireElementInnerText(t, "テスト記事13", locArticle.Locator(`[data-e2e-val="article-title"]`))
-							RequireElementInnerText(t, "1970-01-14", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
+							RequireElementInnerText(t, "テスト記事8", locArticle.Locator(`[data-e2e-val="article-title"]`))
+							RequireElementInnerText(t, "1970-01-09", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
 						}
 
 						locPrevPage := page.Locator(`[data-e2e-val="prev-page"]`)
@@ -265,55 +265,19 @@ article without tags, article with tags, deleted article is ignored, deleted tag
 
 						loc = loc.Locator(`[data-e2e-val="article"]`)
 						count := Count(t, loc)
-						require.Equal(t, 10, count)
+						require.Equal(t, 6, count)
 
 						{
 							locArticle := loc.Nth(0)
 							RequireElementExists(t, locArticle)
-							RequireElementInnerText(t, "テスト記事12", locArticle.Locator(`[data-e2e-val="article-title"]`))
-							RequireElementInnerText(t, "1970-01-13", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
+							RequireElementInnerText(t, "テスト記事7", locArticle.Locator(`[data-e2e-val="article-title"]`))
+							RequireElementInnerText(t, "1970-01-08", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
 						}
 						{
 							locArticle := loc.Nth(count - 1)
 							RequireElementExists(t, locArticle)
-							RequireElementInnerText(t, "テスト記事3", locArticle.Locator(`[data-e2e-val="article-title"]`))
-							RequireElementInnerText(t, "1970-01-04", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
-						}
-
-						locPrevPage := page.Locator(`[data-e2e-val="prev-page"]`)
-						RequireElementExists(t, locPrevPage)
-
-						locNextPage := page.Locator(`[data-e2e-val="next-page"]`)
-						RequireElementExists(t, locNextPage)
-
-						require.NoError(t, locNextPage.Click())
-					}
-					{
-						err := page.WaitForLoadState(
-							playwright.PageWaitForLoadStateOptions{
-								State: playwright.LoadStateLoad,
-							},
-						)
-						require.NoError(t, err)
-
-						loc := page.Locator(`[data-e2e-val="articles"]`)
-						RequireElementExists(t, loc)
-
-						loc = loc.Locator(`[data-e2e-val="article"]`)
-						count := Count(t, loc)
-						require.Equal(t, 3, count)
-
-						{
-							locArticle := loc.Nth(0)
-							RequireElementExists(t, locArticle)
-							RequireElementInnerText(t, "テスト記事2", locArticle.Locator(`[data-e2e-val="article-title"]`))
-							RequireElementInnerText(t, "1970-01-03", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
-						}
-						{
-							locArticle := loc.Nth(count - 1)
-							RequireElementExists(t, locArticle)
-							RequireElementInnerText(t, "テスト記事0", locArticle.Locator(`[data-e2e-val="article-title"]`))
-							RequireElementInnerText(t, "1970-01-01", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
+							RequireElementInnerText(t, "テスト記事1", locArticle.Locator(`[data-e2e-val="article-title"]`))
+							RequireElementInnerText(t, "1970-01-02", locArticle.Locator(`[data-e2e-val="article-published-at"]`))
 						}
 
 						locPrevPage := page.Locator(`[data-e2e-val="prev-page"]`)

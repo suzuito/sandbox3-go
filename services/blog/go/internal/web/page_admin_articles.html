@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<meta name="robots" content="noindex">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+{{template "component_common_head" .}}
+<style>
+  .page_admin_articles_create_button {
+    padding: 6px;
+  }
+</style>
+<body>
+    <header>
+        {{template "component_header" .}}
+    </header>
+    <main>
+        <div class="content">
+            {{template "component_breadcrumbs" .}}
+            <main>
+                <form class="page_admin_articles_create_button" method="POST" name="new_articles" action="/admin/articles">
+                    <a href="javascript:new_articles.submit()">新規作成</a>
+                </form>
+                {{template "component_article_list" .}}
+                {{template "component_article_list_pager" .}}
+            </main>
+        </div>
+    </main>
+    <footer>
+        {{template "component_footer"}}
+    </footer>
+</body>
+
+</html>
