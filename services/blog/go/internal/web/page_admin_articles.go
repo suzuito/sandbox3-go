@@ -8,9 +8,11 @@ import (
 )
 
 type pageGETAdminArticles struct {
-	ComponentHeader     componentHeader
-	ComponentCommonHead componentCommonHead
-	Breadcrumbs         breadcrumbs
+	ComponentHeader           componentHeader
+	ComponentCommonHead       componentCommonHead
+	Articles                  article.Articles
+	ComponentArticleListPager componentArticleListPager
+	Breadcrumbs               breadcrumbs
 }
 
 func (t *impl) pageGETAdminArticles(ctx *gin.Context) {
@@ -22,7 +24,7 @@ func (t *impl) pageGETAdminArticles(ctx *gin.Context) {
 		return
 	}
 
-	obj := pageGETArticles{
+	obj := pageGETAdminArticles{
 		ComponentHeader: componentHeader{
 			IsAdmin: ctxGetAdmin(ctx),
 		},

@@ -13,7 +13,7 @@ type pageGETAdmin struct {
 }
 
 func (t *impl) pageGETAdmin(ctx *gin.Context) {
-	obj := pageGETArticles{
+	obj := pageGETAdmin{
 		ComponentHeader: componentHeader{
 			IsAdmin: ctxGetAdmin(ctx),
 		},
