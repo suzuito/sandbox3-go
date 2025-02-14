@@ -11,6 +11,8 @@ func (t Code) HTTPStatusCode() int {
 	switch t {
 	case CodeBadRequest:
 		return http.StatusBadRequest
+	case CodeNotFound:
+		return http.StatusNotFound
 	}
 	return http.StatusInternalServerError
 }
@@ -18,6 +20,8 @@ func (t Code) HTTPStatusCode() int {
 const (
 	CodeUnknown Code = iota
 	CodeBadRequest
+	CodeUnauthorized
+	CodeNotFound
 )
 
 type stdError struct {
@@ -40,6 +44,20 @@ func ToCode(err error) Code {
 func NewBadRequest(msg string) *stdError {
 	return &stdError{
 		code:    CodeBadRequest,
+		message: msg,
+	}
+}
+
+func NewUnauthorized(msg string) *stdError {
+	return &stdError{
+		code:    CodeUnauthorized,
+		message: msg,
+	}
+}
+
+func NewNotFound(msg string) *stdError {
+	return &stdError{
+		code:    CodeNotFound,
 		message: msg,
 	}
 }

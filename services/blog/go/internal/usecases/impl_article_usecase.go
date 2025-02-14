@@ -13,8 +13,6 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 	*article.FindConditions,
 	error,
 ) {
-	conds.ExcludeDraft = true
-
 	articleIDs, err := t.articleRepository.FindArticles(ctx, conds)
 	if err != nil {
 		return nil, nil, nil, terrors.Wrap(err)

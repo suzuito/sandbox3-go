@@ -14,9 +14,9 @@ type pageGETAdminArticles struct {
 }
 
 func (t *impl) pageGETAdminArticles(ctx *gin.Context) {
-	conds := article.NewFindConditionsFromQuery(ctx.Request.URL.Query())
+	conds := article.NewAdminFindConditionsFromQuery(ctx.Request.URL.Query())
 
-	articles, next, prev, err := t.articleUsecase.FindAdminArticles(ctx, conds)
+	articles, next, prev, err := t.articleUsecase.FindArticles(ctx, conds)
 	if err != nil {
 		t.pageError(ctx, err)
 		return
