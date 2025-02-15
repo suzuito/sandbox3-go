@@ -36,6 +36,7 @@ services:
       - ./:/sandbox3-go:rw
     command: sh -c "cd services/blog && make db-init-loc"
     environment:
+      GOTOOLCHAIN: auto
       DB_HOST: blog-db
       DB_PORT: "5432"
       DB_NAME: blog
@@ -54,6 +55,7 @@ services:
       - 9001:8080
     command: sh -c "cd services/blog && make server-init-loc"
     environment:
+      GOTOOLCHAIN: auto
       ENV: loc
       PORT: "8080"
       SITE_ORIGIN: http://localhost:9001
