@@ -1,20 +1,12 @@
 GO_SOURCES=$(shell find . -name "*.go")
 
-BIN_AIR = $(shell go env GOPATH)/bin/air
-$(BIN_AIR):
-	go install github.com/air-verse/air@latest
-
 BIN_GOLANGCI_LINT = $(shell go env GOPATH)/bin/golangci-lint
 $(BIN_GOLANGCI_LINT):
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.62.2
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.64.5
 
 BIN_GOLANG_MIGRATE = $(shell go env GOPATH)/bin/migrate
 $(BIN_GOLANG_MIGRATE):
 	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-
-BIN_SQLC = $(shell go env GOPATH)/bin/sqlc
-$(BIN_SQLC):
-	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 
 dist/prd/server: $(GO_SOURCES)
 	mkdir -p $(dir $@) && go build -o $@ go/cmd/$(notdir $@)/*.go
@@ -29,8 +21,8 @@ dist/e2e/server: $(GO_SOURCES)
 	mkdir -p $(dir $@) && go build -cover -o $@ go/cmd/$(notdir $@)/*.go
 
 .PHONY: server-init-loc
-server-init-loc: $(BIN_AIR)
-	$(BIN_AIR) -c ./air.server.loc.toml
+server-init-loc:
+	go tool air -c ./air.server.loc.toml
 
 .PHONY: db-init
 db-init: $(BIN_GOLANG_MIGRATE)
@@ -70,5 +62,5 @@ create-migrate: $(BIN_GOLANG_MIGRATE)
 	$(BIN_GOLANG_MIGRATE) create -ext sql -dir db/schema $(NAME)
 
 .PHONY: sqlc
-sqlc: $(BIN_SQLC)
-	$(BIN_SQLC) generate
+sqlc:
+	go tool sqlc generate

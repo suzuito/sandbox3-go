@@ -1,5 +1,7 @@
 FROM golang:1.23.0
 
+ENV GOTOOLCHAIN=auto
+
 RUN apt update
 RUN apt upgrade -y
 RUN apt install -y curl sudo
