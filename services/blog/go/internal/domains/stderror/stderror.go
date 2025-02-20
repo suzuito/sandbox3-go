@@ -11,6 +11,8 @@ func (t Code) HTTPStatusCode() int {
 	switch t {
 	case CodeBadRequest:
 		return http.StatusBadRequest
+	case CodeUnauthorized:
+		return http.StatusUnauthorized
 	case CodeNotFound:
 		return http.StatusNotFound
 	}
