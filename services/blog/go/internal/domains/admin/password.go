@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"context"
 	"crypto/md5"
 	"fmt"
 	"io"
@@ -30,8 +29,4 @@ func HashFuncV1(p PasswordAsPlainText, s Salt) (PasswordAsHash, error) {
 	}
 	sum := h.Sum(nil)
 	return PasswordAsHash(fmt.Sprintf("%x", sum)), nil
-}
-
-type PasswordRepository interface {
-	Get(ctx context.Context) (PasswordAsHash, error)
 }

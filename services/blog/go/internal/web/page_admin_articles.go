@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -71,48 +72,11 @@ type pagePOSTAdminArticles struct {
 }
 
 func (t *impl) pagePOSTAdminArticles(ctx *gin.Context) {
-	conds := article.NewAdminFindConditionsFromQuery(ctx.Request.URL.Query())
-
-	articles, next, prev, err := t.articleUsecase.FindArticles(ctx, conds)
+	id, err := t.articleUsecase.CreateArticle(ctx)
 	if err != nil {
 		t.pageError(ctx, err)
 		return
 	}
 
-	obj := pagePOSTAdminArticles{
-		ComponentHeader: componentHeader{
-			IsAdmin: ctxGetAdmin(ctx),
-		},
-		ComponentCommonHead: componentCommonHead{
-			Title:              "記事一覧",
-			Meta:               nil,
-			GoogleTagManagerID: t.googleTagManagerID,
-		},
-		Breadcrumbs: breadcrumbs{
-			{
-				Path: "/",
-				URL:  newPageURL(t.siteOrigin, "/"),
-				Name: "トップページ",
-			},
-			{
-				Name:   "記事一覧",
-				NoLink: true,
-			},
-		},
-		Articles:                  articles,
-		ComponentArticleListPager: componentArticleListPager{},
-	}
-
-	if next != nil {
-		obj.ComponentArticleListPager.NextURL = next.URL()
-	}
-	if prev != nil {
-		obj.ComponentArticleListPager.PrevURL = prev.URL()
-	}
-
-	ctx.HTML(
-		http.StatusOK,
-		"page_admin_articles.html",
-		&obj,
-	)
+	ctx.Redirect(http.StatusFound, fmt.Sprintf("/admin/articles/%s", id.String()))
 }

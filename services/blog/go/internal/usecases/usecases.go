@@ -8,7 +8,7 @@ import (
 )
 
 type ArticleUsecase interface {
-	// Create(ctx context.Context) (domains.ArticleID, error)
+	CreateArticle(ctx context.Context) (article.ID, error)
 	FindArticles(
 		ctx context.Context,
 		cond *article.FindConditions,
@@ -17,4 +17,5 @@ type ArticleUsecase interface {
 
 type LoginUsecase interface {
 	LoginAsAdmin(ctx context.Context, inputPassword admin.PasswordAsPlainText) (*admin.LoginSession, error)
+	AuthnAdmin(ctx context.Context, id admin.LoginSessionID) (*admin.LoginSession, error)
 }

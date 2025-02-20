@@ -1,10 +1,10 @@
 package admin
 
 import (
-	"context"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/suzuito/sandbox2-common-go/libs/terrors"
 )
 
 type LoginSessionID uuid.UUID
@@ -17,12 +17,15 @@ func NewLoginSessionID() LoginSessionID {
 	return LoginSessionID(uuid.New())
 }
 
+func NewLoginSessionIDFromString(s string) (LoginSessionID, error) {
+	id, err := uuid.Parse(s)
+	if err != nil {
+		return LoginSessionID{}, terrors.Errorf("invalid uuid: %w", err)
+	}
+	return LoginSessionID(id), nil
+}
+
 type LoginSession struct {
 	ID        LoginSessionID
 	ExpiredAt time.Time
-}
-
-type SessionRepository interface {
-	CreateSession(ctx context.Context, id LoginSessionID) (*LoginSession, error)
-	ReadSession(ctx context.Context, id LoginSessionID) (*LoginSession, error)
 }

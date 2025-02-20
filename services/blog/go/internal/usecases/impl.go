@@ -6,17 +6,16 @@ import (
 )
 
 type impl struct {
-	articleRepository article.Repository
-
-	adminService *admin.Service
+	adminService   *admin.Service
+	articleService *article.Service
 }
 
 func NewImpl(
-	articleRepository article.Repository,
 	adminService *admin.Service,
+	articleService *article.Service,
 ) *impl {
 	return &impl{
-		articleRepository: articleRepository,
-		adminService:      adminService,
+		adminService:   adminService,
+		articleService: articleService,
 	}
 }

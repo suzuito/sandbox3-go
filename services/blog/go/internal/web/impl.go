@@ -60,6 +60,8 @@ func (t *impl) SetEngine(e *gin.Engine) {
 			gAdminArticles.GET("", t.pageGETAdminArticles)
 			gAdminArticles.POST("", t.pagePOSTAdminArticles)
 		}
+
+		gAdmin.POST("logout", t.pagePOSTLogout)
 	}
 }
 

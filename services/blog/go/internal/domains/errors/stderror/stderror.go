@@ -31,7 +31,7 @@ type stdError struct {
 	message string
 }
 
-func (t stdError) Error() string {
+func (t *stdError) Error() string {
 	return t.message
 }
 

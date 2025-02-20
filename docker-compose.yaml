@@ -60,7 +60,8 @@ services:
       PORT: "8080"
       SITE_ORIGIN: http://localhost:9001
       GOOGLE_TAG_MANAGER_ID: dummy_tag_id
-      ADMIN_TOKEN: dummy_admin_token
+      ADMIN_PASSWORD_SALT: hoge
+      ADMIN_PASSWORD_HASH: 39a3d3c5e1ee76893484218ac3a0e846 # password is 'a'
       DIR_PATH_HTML_TEMPLATE: go/internal/web
       DIR_PATH_CSS: go/internal/web/_css
       LOG_LEVEL: debug

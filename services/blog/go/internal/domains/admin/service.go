@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/suzuito/sandbox2-common-go/libs/terrors"
-	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/stderror"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/errors/stderror"
 )
 
 type Service struct {
@@ -42,6 +42,18 @@ func (t *Service) Login(
 	session, err := t.sessionRepository.CreateSession(ctx, sessionID)
 	if err != nil {
 		return nil, terrors.Errorf("failed to create session: %w", err)
+	}
+
+	return session, nil
+}
+
+func (t *Service) Authn(
+	ctx context.Context,
+	id LoginSessionID,
+) (*LoginSession, error) {
+	session, err := t.sessionRepository.ReadSession(ctx, id)
+	if err != nil {
+		return nil, terrors.Errorf("failed to read session: %w", err)
 	}
 
 	return session, nil

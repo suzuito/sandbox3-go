@@ -11,6 +11,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/suzuito/sandbox2-common-go/libs/utils"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/admin"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/article"
 	infraadmin "github.com/suzuito/sandbox3-go/services/blog/go/internal/infra/local/repositories/admin"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/infra/rdb/repositories"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/inject"
@@ -38,7 +39,8 @@ func main() {
 	saltRepository := infraadmin.NewSaltRepository(env.AdminPasswordSalt)
 	passwordRepository := infraadmin.NewPasswordRepository(env.AdminPasswordHash)
 	adminService := admin.NewService(saltRepository, passwordRepository, repo, admin.HashFuncV1)
-	uc := usecases.NewImpl(repo, adminService)
+	articleService := article.NewService(repo)
+	uc := usecases.NewImpl(adminService, articleService)
 
 	logger := inject.NewLogger(&env)
 

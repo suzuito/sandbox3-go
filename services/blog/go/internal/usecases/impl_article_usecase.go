@@ -13,33 +13,14 @@ func (t *impl) FindArticles(ctx context.Context, conds *article.FindConditions) 
 	*article.FindConditions,
 	error,
 ) {
-	articleIDs, err := t.articleRepository.FindArticles(ctx, conds)
+	return t.articleService.FindArticles(ctx, conds)
+}
+
+func (t *impl) CreateArticle(ctx context.Context) (article.ID, error) {
+	art, err := t.articleService.CreateArticle(ctx)
 	if err != nil {
-		return nil, nil, nil, terrors.Wrap(err)
+		return article.ID{}, terrors.Wrap(err)
 	}
 
-	if len(articleIDs) <= 0 {
-		return article.Articles{}, nil, nil, nil
-	}
-
-	articles, err := t.articleRepository.ReadArticles(ctx, articleIDs)
-	if err != nil {
-		return nil, nil, nil, terrors.Wrap(err)
-	}
-
-	if len(articleIDs) != len(articles) {
-		return nil, nil, nil, terrors.Errorf("some article ids are not found")
-	}
-
-	var next *article.FindConditions
-	if len(articles) >= int(conds.Count) {
-		next = conds.Next()
-	}
-
-	var prev *article.FindConditions
-	if conds.Page > 0 {
-		prev = conds.Prev()
-	}
-
-	return articles, next, prev, nil
+	return art.ID, nil
 }

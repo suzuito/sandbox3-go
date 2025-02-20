@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/admin"
-	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/stderror"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/errors/stderror"
 )
 
 type pageGETLogin struct {
@@ -45,6 +45,20 @@ func (t *impl) pagePOSTLogin(ctx *gin.Context) {
 		"session",
 		session.ID.UUID().String(),
 		86400,
+		"/",
+		"",
+		false,
+		false,
+	)
+
+	ctx.Redirect(http.StatusFound, "/")
+}
+
+func (t *impl) pagePOSTLogout(ctx *gin.Context) {
+	ctx.SetCookie(
+		"session",
+		"",
+		0,
 		"/",
 		"",
 		false,

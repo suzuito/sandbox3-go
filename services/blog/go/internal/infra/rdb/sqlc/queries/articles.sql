@@ -1,3 +1,6 @@
+-- name: CreateArticle :exec
+INSERT INTO articles(id, title, published_at) VALUES ($1, $2, $3);
+
 -- name: ReadArticlesByIDs :many
 SELECT
   articles.id AS id,
