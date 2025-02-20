@@ -10,6 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/suzuito/sandbox2-common-go/libs/utils"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/admin"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/article"
+	infraadmin "github.com/suzuito/sandbox3-go/services/blog/go/internal/infra/local/repositories/admin"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/infra/rdb/repositories"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/inject"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/usecases"
@@ -33,11 +36,15 @@ func main() {
 	}
 
 	repo := repositories.NewImpl(pgxConn)
-	uc := usecases.NewImpl(repo)
+	saltRepository := infraadmin.NewSaltRepository(env.AdminPasswordSalt)
+	passwordRepository := infraadmin.NewPasswordRepository(env.AdminPasswordHash)
+	adminService := admin.NewService(saltRepository, passwordRepository, repo, admin.HashFuncV1)
+	articleService := article.NewService(repo)
+	uc := usecases.NewImpl(adminService, articleService)
 
 	logger := inject.NewLogger(&env)
 
-	w, err := web.New(&env, logger, uc)
+	w, err := web.New(&env, logger, uc, uc)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to new web: %v\n", err)
 		os.Exit(1)

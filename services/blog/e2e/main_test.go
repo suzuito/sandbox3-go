@@ -49,7 +49,7 @@ func defaultEnvs(s *setting) []string {
 		fmt.Sprintf("PORT=%d", s.Port),
 		"SITE_ORIGIN=http://localhost:9003",
 		"GOOGLE_TAG_MANAGER_ID=dummy_tag_id",
-		"ADMIN_TOKEN=dummy_admin_token",
+		"ADMIN_TOKEN=hoge",
 		"DIR_PATH_HTML_TEMPLATE=../go/internal/web",
 		"DIR_PATH_CSS=../go/internal/web/_css",
 		"LOGGER_TYPE=json",

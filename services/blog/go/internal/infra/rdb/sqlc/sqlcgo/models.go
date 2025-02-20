@@ -9,6 +9,12 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type AdminLoginSession struct {
+	ID        uuid.UUID
+	CreatedAt pgtype.Timestamp
+	ExpiredAt pgtype.Timestamp
+}
+
 type Article struct {
 	ID          uuid.UUID
 	Title       string

@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -60,4 +61,22 @@ func (t *impl) pageGETAdminArticles(ctx *gin.Context) {
 		"page_admin_articles.html",
 		&obj,
 	)
+}
+
+type pagePOSTAdminArticles struct {
+	ComponentHeader           componentHeader
+	ComponentCommonHead       componentCommonHead
+	Articles                  article.Articles
+	ComponentArticleListPager componentArticleListPager
+	Breadcrumbs               breadcrumbs
+}
+
+func (t *impl) pagePOSTAdminArticles(ctx *gin.Context) {
+	id, err := t.articleUsecase.CreateArticle(ctx)
+	if err != nil {
+		t.pageError(ctx, err)
+		return
+	}
+
+	ctx.Redirect(http.StatusFound, fmt.Sprintf("/admin/articles/%s", id.String()))
 }

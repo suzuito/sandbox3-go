@@ -11,6 +11,8 @@ func (t Code) HTTPStatusCode() int {
 	switch t {
 	case CodeBadRequest:
 		return http.StatusBadRequest
+	case CodeUnauthorized:
+		return http.StatusUnauthorized
 	case CodeNotFound:
 		return http.StatusNotFound
 	}
@@ -29,7 +31,7 @@ type stdError struct {
 	message string
 }
 
-func (t stdError) Error() string {
+func (t *stdError) Error() string {
 	return t.message
 }
 

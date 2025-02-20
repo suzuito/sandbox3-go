@@ -5,3 +5,4 @@ DROP TABLE IF EXISTS tags;
 DROP INDEX IF EXISTS uidx_tags_name;
 DROP TABLE IF EXISTS file_thumbnails;
 DROP TABLE IF EXISTS files;
+DROP TABLE IF EXISTS admin_login_sessions;

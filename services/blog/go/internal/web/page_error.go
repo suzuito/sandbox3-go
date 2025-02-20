@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/stderror"
+	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/errors/stderror"
 )
 
 type pageError struct {

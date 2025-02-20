@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/suzuito/sandbox2-common-go/libs/terrors"
 	"github.com/suzuito/sandbox3-go/services/blog/go/internal/domains/tag"
 )
 
@@ -27,8 +28,16 @@ func NewIDsFromUUIDs(ids []uuid.UUID) IDs {
 
 type ID uuid.UUID
 
+func (t ID) UUID() uuid.UUID {
+	return uuid.UUID(t)
+}
+
 func (t ID) String() string {
 	return uuid.UUID(t).String()
+}
+
+func NewID() ID {
+	return ID(uuid.New())
 }
 
 type Article struct {
@@ -38,7 +47,6 @@ type Article struct {
 	Tags        tag.Tags
 }
 
-/*
 func (t *Article) ValidateAsDraft() error {
 	if err := t.validate(); err != nil {
 		return terrors.Wrap(err)
@@ -70,7 +78,6 @@ func (t *Article) validate() error {
 
 	return nil
 }
-*/
 
 func (t *Article) IsDraft() bool {
 	return t.PublishedAt == nil

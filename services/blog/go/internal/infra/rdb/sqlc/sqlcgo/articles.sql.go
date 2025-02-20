@@ -12,6 +12,21 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const createArticle = `-- name: CreateArticle :exec
+INSERT INTO articles(id, title, published_at) VALUES ($1, $2, $3)
+`
+
+type CreateArticleParams struct {
+	ID          uuid.UUID
+	Title       string
+	PublishedAt pgtype.Timestamp
+}
+
+func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) error {
+	_, err := q.db.Exec(ctx, createArticle, arg.ID, arg.Title, arg.PublishedAt)
+	return err
+}
+
 const readArticlesByIDs = `-- name: ReadArticlesByIDs :many
 SELECT
   articles.id AS id,

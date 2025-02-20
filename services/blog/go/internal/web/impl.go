@@ -15,13 +15,13 @@ import (
 type impl struct {
 	siteOrigin          url.URL
 	googleTagManagerID  string
-	adminToken          string
 	dirPathHTMLTemplate string
 	dirPathCSS          string
 
 	logger *slog.Logger
 
 	articleUsecase usecases.ArticleUsecase
+	loginUsecase   usecases.LoginUsecase
 }
 
 func (t *impl) SetEngine(e *gin.Engine) {
@@ -35,11 +35,19 @@ func (t *impl) SetEngine(e *gin.Engine) {
 	e.LoadHTMLGlob(path.Join(t.dirPathHTMLTemplate, "*.html"))
 	e.Static("css", t.dirPathCSS)
 	e.Use(t.middlewareAdminAuthn)
+	e.Use(t.middlewareSetCookieSameSiteStrict)
 
 	e.GET("", t.pageIndex)
 	{
 		gArticles := e.Group("articles")
 		gArticles.GET("", t.pageGETArticles)
+	}
+
+	{
+		gLogin := e.Group("login")
+		gLogin.Use(middlewareXRobotsTag)
+		gLogin.GET("", t.pageGETLogin)
+		gLogin.POST("", t.pagePOSTLogin)
 	}
 
 	{
@@ -50,7 +58,10 @@ func (t *impl) SetEngine(e *gin.Engine) {
 		{
 			gAdminArticles := gAdmin.Group("articles")
 			gAdminArticles.GET("", t.pageGETAdminArticles)
+			gAdminArticles.POST("", t.pagePOSTAdminArticles)
 		}
+
+		gAdmin.POST("logout", t.pagePOSTLogout)
 	}
 }
 
@@ -58,6 +69,7 @@ func New(
 	env *inject.Environment,
 	logger *slog.Logger,
 	articleUsecase usecases.ArticleUsecase,
+	loginUsecase usecases.LoginUsecase,
 ) (*impl, error) {
 	urlSiteOrigin, err := url.Parse(env.SiteOrigin)
 	if err != nil {
@@ -67,10 +79,10 @@ func New(
 	return &impl{
 		siteOrigin:          *urlSiteOrigin,
 		googleTagManagerID:  env.GoogleTagManagerID,
-		adminToken:          env.AdminToken,
 		dirPathHTMLTemplate: env.DirPathHTMLTemplate,
 		dirPathCSS:          env.DirPathCSS,
 		logger:              logger,
 		articleUsecase:      articleUsecase,
+		loginUsecase:        loginUsecase,
 	}, nil
 }
